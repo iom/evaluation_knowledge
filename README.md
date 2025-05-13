@@ -1,78 +1,121 @@
-# Evaluation Evidence Mapping  
+# Evaluation Evidence Mapping for IOM
 
 ## Introduction
 
-An **Evaluation Evidence Map** is a visual and systematic way to organize what we know (and don't know) about programs, policies, or interventions. Think of it as creating a "research landscape" that helps decision-makers quickly see:
+An **Evaluation Evidence Map** is a structured, visual tool that organizes what we know—and don’t know—about programs, policies, and interventions. Think of it as a research landscape that helps decision-makers quickly understand:
 
-- What interventions have been studied
-- Where they've been implemented
-- What results were found
-- Where important gaps exist
+- Which interventions have been evaluated  
+- Where they were implemented  
+- What outcomes were observed  
+- Where critical knowledge gaps remain  
 
-This approach is particularly valuable when designing projects that need to make evidence-based decisions but when project designer don't have time to read hundreds of reports.
+This approach is especially valuable for evidence-informed project design, particularly when time or resources limit the ability to read through hundreds of individual evaluation reports (see [UNICEF Evidence Map example](https://evaluationreports.unicef.org/app/evaluation-evidence-gap-map.html)).
 
-## Non-Technical Approach
+The goal of this exercise is to inform future evaluation design, guide strategic planning, and support the development of robust, evidence-based project proposals and strategic plan.
 
-### Step 1: Define Focus
-**Ask yourself:**
-- What types of programs/interventions are we interested in? (e.g., [IOM strategic Results Framework](https://www.iom.int/sites/g/files/tmzbdl486/files/our_work/ICP/IOM-Strategic-Results-Framework.pdf))
-- What populations are we focusing on? (e.g., migrants, host communities)
-- What outcomes matter most? (e.g., test scores, disease rates)
-- Who is the audience for this map? (policymakers, researchers, funders, project managers)
-- What are the key questions we want to answer? (e.g., "What works best for improving educational outcomes in rural areas?")
-- What is the time frame for our mapping? (e.g., last 5 years, all time)    
-- What is the geographic scope? (e.g., global, regional, country-specific)
-- What is the level of evidence we need? (e.g., randomized controlled trials, observational studies)
-- What are the key variables we want to track? (e.g., program type, target population, outcome measures)    
- 
+---
 
-### Step 2: Building the Knowledge Base
+## Approach
 
-We have set up a list with the URL of all the evaluation reports published by IOM.
+### Defining the Focus
 
+To ensure relevance, we begin by clarifying the scope and purpose of the mapping:
 
-### Step 3: Extract Key Information
-We'll use AI tools to help us extract key information from the reports. This will save time and ensure consistency across studies.
+- **What types of interventions are we assessing?** (IOM programs, policies, and strategies, e.g., cash-based interventions, health services, community engagement)
 
-- **What** was implemented (the program details)
-- **Where** and **with whom** it was tested
-- **How** it was studied (study design)
-- **What** results were found
-- **How confident** we are in the findings
+- **Who are the target populations?**  (e.g., migrants, displaced persons, host communities)  
 
-### Step 4: Organize the Evidence
+- **What outcomes matter most?**  (e.g., livelihood improvements, health outcomes, social integration - Aligned with the [IOM Strategic Results Framework](https://www.iom.int/iom-strategic-results-framework-srf))  
 
-We'll categorize studies into a consistent framework:
-1. By **program type** (e.g., tutoring, mentoring, vocational training)
-2. By **outcome measured** (e.g., math scores, graduation rates)
-3. By **population** (e.g., elementary students, rural communities)
-4. By **study quality** (gold-standard studies vs. preliminary research)
+- **Who is the audience for this map?**   (e.g., policymakers, funders, researchers, program managers, donors)  
 
-### Step 5: Identify Patterns and Gaps
+- **What are our key learning questions?**  (e.g., “What works best to maximize impact an effectivness?”)  
 
-The system will help us spot:
-✅ Areas with lots of consistent evidence  
-⚠️ Areas with conflicting results  
-❌ Important questions no one has studied  
+- **What level of evidence is required?**  (e.g., RCTs, quasi-experiments, observational studies)  
 
-*Example finding:* "We have strong evidence that mentoring programs work for urban youth, but almost no studies on rural populations."
+- **What variables are we tracking?** (e.g., intervention type, target group, outcomes, geography)
 
-### Step 6: Create Visual Maps
+---
 
-We'll generate easy-to-understand charts showing:
-- **Bubble maps** (where bubble size = study size)
-- **Heatmaps** (showing evidence density)
-- **Gap maps** (highlighting unstudied areas)
+### Building the Knowledge Base
 
-### Step 7: Generate Actionable Insights through AI-ready Q&A
+We have compiled a list of all publicly available [IOM Evaluation Reports](https://www.iom.int/evaluation-reports).
 
-The system will produce plain-language summaries answering:
-- "What works best for [X goal] in [Y context]?"
+Each report will be analyzed to generate a structured **metadata record**, including:
 
-### Step 8: Share Findings
+- **What**: Title, summary, full-text link, evaluation type (formative, summative, impact), scope (strategy, policy, thematic, program, or project), and geographic coverage  
+- **Who**: Conducting entity (IOM internal vs. external evaluators)  
+- **How**: Methodology, study design, sample size, and data collection techniques  
 
-We'll create a final report for:
-- "Where should we focus future research?"
-- "Which programs are riskiest to implement?"
+These metadata and full-text documents will be convert the content of each report into a **embeddings vector database**, enabling fast, flexible, and AI-enhanced retrieval using advanced tools like [Hybrid Search](https://docs.lancedb.com/core/hybrid-search).
 
+---
+
+### Structured Information Extraction
+
+We will create a set of plain-language questions, reflecting the entire IOM Results Framework.
+Using AI tools, we will extract consistent and comparable data from each report:
+
+- **Program details** (what was implemented)  
+- **Context** (where and with whom)  
+- **Design** (how it was studied)  
+- **Findings** (what results were observed)  
+- **Strength of evidence** (how reliable the findings are)
+
+---
+
+### Organize the Evidence
+
+We will then run those questions through the vector database to generate answers based first on each evaluation.
+This will allow to categorize the data within a structured framework:
+
+1. **By intervention type** (e.g., skills training, psychosocial support)  
+2. **By measured outcome** (e.g., employment, resilience, community cohesion)  
+3. **By population** (e.g., migrants in transit, returnees, host communities)  
+4. **By evidence quality** (e.g., robust vs. exploratory studies)
+
+---
+
+### Generate Actionable Insights with AI-Enabled Q&A
+
+We will then re-run the same questions on the full corpus of Q&A previously generated, therefore accounting for all evidences that were gathered across all evaluations. 
+
+This will allow us to quickly assess the evidence base and identify key insights, such as: _ "What types of interventions are most effective in improving livelihood outcomes for migrants in urban settings?"_
+
+---
+
+### Identify Patterns and Gaps
+
+We’ll present the results across objectives, outcome, population and geography using intuitive, interactive visualizations:
+
+- **Bubble maps** (bubble size = number of studies or sample size)  
+- **Heatmaps** (showing concentration of evidence by topic or geography)  
+- **Gap maps** (highlighting under-researched areas)
+
+The evidence system will allow us to quickly highlight:
+
+- ✅ Areas with strong, consistent evidence  
+- ⚠️ Topics with mixed or conflicting findings  
+- ❌ Critical gaps where no evidence exists  
+
+*Example Insight:*  
+> “Mentoring programs show consistent positive results for urban migrant youth, but there’s limited evidence for rural populations.”
+
+---
+
+## Deliverables
+
+The final deliverables will include:
+
+- A Q&A dataset that can be used:
+  - As a reference for [content curation and evaluation](https://api.labelstud.io/tutorials/tutorials/evaluate-llm-responses)  
+  - As a [knowledge base](https://docs.crewai.com/concepts/knowledge) for AI-enhanced project proposal systems  
+  - As a training dataset for fine-tuning small language models via [Hugging Face](https://huggingface.co/)  
+
+- A synthesis report identifying:
+  - Research priorities  
+  - High-risk areas for intervention  
+  - Recommendations for future evaluations  
+
+- A searchable online **visual evidence map** for ongoing use by IOM teams
 
