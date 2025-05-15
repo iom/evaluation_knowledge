@@ -13,11 +13,13 @@ This approach is especially valuable for evidence-informed project design, parti
 
 The goal of this exercise is to inform future evaluation design, guide strategic planning, and support the development of robust, evidence-based project proposals and strategic plan.
 
+In addition, such AI-enhanced approach shall help to manage evaluation output as  __["LivingEvidence"](https://www.aliveevidence.org/)__ - aka looking at knowledge synthesis as an ongoing rather than static endeavor - that can improve the timeliness of recommendation updates and reduce the knowledge-to-practice gap. 
+
+Last The approach used here is also tackling the __[Evidence Generalization Problem](https://ssir.org/articles/entry/the_generalizability_puzzle)__, which refers to the challenge of applying findings from one context to another. By systematically mapping evidence across diverse contexts, we can better understand how and why certain interventions work in specific settings, and identify the conditions under which they are most effective.
+
 ---
 
 ## Approach
-
-### Defining the Focus
 
 To ensure relevance, we begin by clarifying the scope and purpose of the mapping:
 
@@ -37,9 +39,9 @@ To ensure relevance, we begin by clarifying the scope and purpose of the mapping
 
 ---
 
-### Building the Knowledge Base
+### Step 1: Building the Knowledge Base
 
-We have compiled a list of all publicly available [IOM Evaluation Reports](https://www.iom.int/evaluation-reports).
+We have compiled a list of all publicly available [IOM Evaluation Reports](https://evaluation.iom.int/evaluation-search-pdf).
 
 Each report will be analyzed to generate a structured **metadata record**, including:
 
@@ -51,7 +53,7 @@ These metadata and full-text documents will be convert the content of each repor
 
 ---
 
-### Structured Information Extraction
+### Step 2: Structured Information Extraction
 
 We will create a set of plain-language questions, reflecting the entire IOM Results Framework.
 Using AI tools, we will extract consistent and comparable data from each report:
@@ -64,9 +66,10 @@ Using AI tools, we will extract consistent and comparable data from each report:
 
 ---
 
-### Organize the Evidence
+### Step 3: Organize the Evidence
 
 We will then run those questions through the vector database to generate answers based first on each evaluation.
+
 This will allow to categorize the data within a structured framework:
 
 1. **By intervention type** (e.g., skills training, psychosocial support)  
@@ -76,15 +79,17 @@ This will allow to categorize the data within a structured framework:
 
 ---
 
-### Generate Actionable Insights with AI-Enabled Q&A
+### Step 4: Generate Actionable and Generalizable Insights 
 
-We will then re-run the same questions on the full corpus of Q&A previously generated, therefore accounting for all evidences that were gathered across all evaluations. 
+One key challenge is How to generalize the findings from an evaluation from one place to another one? The [Generalizability Framework](https://ssir.org/articles/entry/the_generalizability_puzzle) provides some insights on how to do that.
+
+We will use the same questions to generate a **Q&A dataset** that can be used to answer the same questions across all evaluations, aka the full corpus of Q&A previously generated, therefore accounting for all evidences that were gathered across all evaluations. 
 
 This will allow us to quickly assess the evidence base and identify key insights, such as: _ "What types of interventions are most effective in improving livelihood outcomes for migrants in urban settings?"_
 
 ---
 
-### Identify Patterns and Gaps
+### Step 5: Identify Patterns and Gaps
 
 We’ll present the results across objectives, outcome, population and geography using intuitive, interactive visualizations:
 
@@ -118,4 +123,3 @@ The final deliverables will include:
   - Recommendations for future evaluations  
 
 - A searchable online **visual evidence map** for ongoing use by IOM teams
-
