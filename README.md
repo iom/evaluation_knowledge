@@ -1,15 +1,42 @@
-# Evaluation Evidence Mapping for IOM
+# AI-Assisted Evaluation Evidence Mapping for IOM
 
 ## Introduction
 
-An **Evaluation Evidence Map** is a structured, visual tool that organizes what we know—and don’t know—about programs, policies, and interventions. Think of it as a research landscape that helps decision-makers quickly understand:
+An **Evidence Map** is a structured, visual tool that organizes what we know—and don’t know—about programs, policies, and interventions. Think of it as a research and evaluation landscape that helps understand how the evidence available is distributed against a framework of reference: for example, the Sustainable Development Goals. 
+
+It allows us to quickly identify:
 
 - Which interventions have been evaluated  
 - Where they were implemented  
 - What outcomes were observed  
 - Where critical knowledge gaps remain  
 
-This approach is especially valuable for evidence-informed project design, particularly when time or resources limit the ability to read through hundreds of individual evaluation reports (see [UNICEF Evidence Map example](https://evaluationreports.unicef.org/app/evaluation-evidence-gap-map.html)).
+This approach is especially valuable for evidence-informed project design, particularly when time or resources limit the ability to read through hundreds of individual evaluation reports.
+
+
+## Some examples of Evidence Maps:
+
+* [Evidence and Gap Maps relating to Sustainable Development Goals](https://www.sdgsynthesiscoalition.org/sites/default/files/2024-10/Map%20of%20Maps%20on%20SDGs%20in%20LMICs_05122024.html)
+
+* [Known from birth: Generating and using evidence to strengthen birth registration systems in Africa (UNICEF)](https://www.unicef.org/innocenti/media/3861/file/CA-BirthEviMap-Final-14.09.2023.pdf)
+
+* Child and Adolescent Mental Health and Psychosocial Support Interventions: An evidence and gap map of low- and middle-income countries ([Report](https://onlinelibrary.wiley.com/doi/10.1002/cl2.1349?msockid=0f883b2b378764a726682f9536af656c))
+
+* Youth Futures Foundation Evidence & Gap Map on Interventions to Increase Youth Employment ([Map](https://youthfuturesfoundation.org/wp-content/uploads/2025/02/Youth-Futures-Evidence-and-Gap-Map-updated-Jan-2025.html); [Report](https://youthfuturesfoundation.org/wp-content/uploads/2024/11/Youth-Futures-Foundation-Evidence-and-Gap-Map-Effectiveness-of-Interventions-Technical-Report-November-2024.pdf))
+
+* [Evidence map by the UNSDG System-Wide Evaluation Office (SWEO) mapping UN evaluations against the 2024 Quadrennial Comprehensive Policy Review (QCPR)](https://www.sdgsynthesiscoalition.org/sites/default/files/2024-10/UNSWE_Interactive%20Evaluation%20Evidence%20Map_QCPR_coverage_v1.0.html)
+
+* [UNICEF Evidence Map example](https://evaluationreports.unicef.org/app/evaluation-evidence-gap-map.html)).
+
+
+
+## About this project
+
+Evidence Maps are relatively established tools that started being common before the popularization of LLMs and AI in general. Their production generally entails a large amount of staff-hours spent on reviewing documentation and "tagging" it, with more or less articulated arrangements for source selection and cross-verification of the human-led classification. Recent practice in evidence mapping focuses on the automation of different steps of the map production process via AI.
+
+The goal of this exercise is to create an AI-powered open source application capable of accurately ""tagging" evaluation reports against the [IOM Strategic Result Framework](https://www.iom.int/iom-strategic-results-framework-srf) and the [Global Compact on Migration](https://www.iom.int/global-compact-migration), two important tools that guide the action of IOM and other entities in the humanitarian and development space. 
+
+Rather than a fully automated tagging tool, the instrument will be used in the context of a structured and efficient human-machine collaboration protocol whereby the relative strengths of each are leveraged. This initiative aims at producing a fully reproducible solution that is not only scalable, but also easy to repurpose for other applications in the humanitarian and development space.
 
 The goal of this exercise is to inform future evaluation design, guide strategic planning, and support the development of robust, evidence-based project proposals and strategic plan.
 
@@ -66,7 +93,7 @@ Using AI tools, we will extract consistent and comparable data from each report:
 
 ---
 
-### Step 3: Organize the Evidence
+### Step 3: Organize and vet the Evidence
 
 We will then run those questions through the vector database to generate answers based first on each evaluation.
 
@@ -122,4 +149,4 @@ The final deliverables will include:
   - High-risk areas for intervention  
   - Recommendations for future evaluations  
 
-- A searchable online **visual evidence map** for ongoing use by IOM teams
+- A searchable online **visual evidence map** for ongoing use by IOM teams that would allow to see evidence according to both SRF and GCM frameworks.
