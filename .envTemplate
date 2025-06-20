@@ -1,0 +1,9 @@
+
+# Azure Key Vault
+AZURE_KEY_VAULT_URL=https://your-keyvault-name.vault.azure.net/
+
+# Optional: fallback values if not using Key Vault (not recommended for production)
+AZURE_OPENAI_KEY=your-azure-openai-api-key
+AZURE_OPENAI_ENDPOINT=https://your-resource-name.openai.azure.com
+AZURE_OPENAI_API_VERSION=2023-05-15
+AZURE_OPENAI_MODEL=your-model-name  
