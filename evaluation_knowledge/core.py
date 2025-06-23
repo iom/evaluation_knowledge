@@ -12,8 +12,8 @@ __all__ = ['MAX_RETRIES', 'RETRY_DELAY', 'THREADS', 'THROTTLE_DELAY_RANGE', 'USE
 
 # %% ../nbs/00_core.ipynb 8
 #|eval: true
-#|echo: true
-#|output: true
+#| echo: true
+#|label: load_evaluations
 import pandas as pd
 import openpyxl
 import json
@@ -85,8 +85,8 @@ def load_evaluations(file_path,json_path):
 
 # %% ../nbs/00_core.ipynb 11
 #|eval: true
-#|echo: true
-#|output: true
+#| echo: true
+#|label: load_iom_framework
 import pandas as pd
 import openpyxl
 def load_iom_framework(excel_path: str) -> pd.DataFrame:
@@ -103,8 +103,8 @@ def load_iom_framework(excel_path: str) -> pd.DataFrame:
 
 # %% ../nbs/00_core.ipynb 17
 #|eval: true
-#|echo: true
-#|output: true
+#| echo: true
+#|label: load_evaluations
 from typing import List, Dict, Optional # Type hinting
 import json
 def load_evaluations(json_path: str) -> List[Dict]:
@@ -138,8 +138,8 @@ def load_evaluations(json_path: str) -> List[Dict]:
 
 # %% ../nbs/00_core.ipynb 21
 #|eval: true
-#|echo: true
-#|output: true
+#| echo: true
+#|label: generate_id
 import hashlib
 def generate_id(text: str) -> str:
     """Generate a deterministic ID from text"""
@@ -147,8 +147,8 @@ def generate_id(text: str) -> str:
 
 # %% ../nbs/00_core.ipynb 23
 #|eval: true
-#|echo: true
-#|output: true
+#| echo: true
+#|label: force_delete_directory
 import time
 import shutil
 def force_delete_directory(path, max_retries=3, delay=1):
@@ -168,8 +168,8 @@ def force_delete_directory(path, max_retries=3, delay=1):
 
 # %% ../nbs/00_core.ipynb 26
 #|eval: true
-#|echo: true
-#|output: true
+#| echo: true
+#|label: initialise_knowledge_base
 from lancedb import connect
 import numpy as np
 
@@ -316,8 +316,8 @@ def initialise_knowledge_base(db, evaluation: Dict):
 
 # %% ../nbs/00_core.ipynb 33
 #|eval: true
-#|echo: true
-#|output: true
+#| echo: true
+#|label: download_documents
 import os
 import time
 import random
@@ -417,8 +417,8 @@ def download_documents(doc_table):
 
 # %% ../nbs/00_core.ipynb 35
 #|eval: true
-#|echo: true
-#|output: true
+#| echo: true
+#|label: convert_file_to_pdf
 import subprocess
 import platform
 from pathlib import Path
@@ -502,9 +502,9 @@ def convert_file_to_pdf(input_path, output_path):
 
 
 # %% ../nbs/00_core.ipynb 39
-#|eval: true
-#|echo: true
-#|output: true
+#|eval: false
+#| echo: true
+#|label: initialise_embeddings
 # Initialize embeddings
 import os
 from dotenv import load_dotenv 
@@ -521,8 +521,8 @@ embedding_model = AzureOpenAIEmbeddings(
 
 # %% ../nbs/00_core.ipynb 45
 #|eval: true
-#|echo: true
-#|output: true
+#| echo: true
+#|label: process_documents_to_chunks
 import os
 import fitz  # PyMuPDF
 import uuid
@@ -690,8 +690,8 @@ def process_documents_to_chunks(doc_table, chunk_table):
 
 # %% ../nbs/00_core.ipynb 49
 #|eval: true
-#|echo: true
-#|output: true
+#| echo: true
+#|label: check_chunk_status
 def check_chunk_status(doc_table, chunk_table):
     import pandas as pd
 
@@ -733,8 +733,8 @@ def check_chunk_status(doc_table, chunk_table):
 
 # %% ../nbs/00_core.ipynb 52
 #|eval: true
-#|echo: true
-#|output: true
+#| echo: true
+#|label: generate_evaluation_metadata
 # setting up for metadata generation
 import json
 import time
@@ -873,8 +873,8 @@ def get_context_for_eval(eval_row, query, chunk_table):
 
 # %% ../nbs/00_core.ipynb 54
 #|eval: true
-#|echo: true
-#|output: true
+#| echo: true
+#|label: generate_metadata_for_evaluation_metadata_descriptive
 # descriptive
 from langchain.schema import HumanMessage
 from json import JSONDecodeError
@@ -951,8 +951,8 @@ def generate_metadata_for_evaluation_metadata_descriptive(eval_row, query_descri
 
 # %% ../nbs/00_core.ipynb 55
 #|eval: true
-#|echo: true
-#|output: true
+#| echo: true
+#|label: generate_metadata_for_evaluation_metadata_methodo
 #methodo
 from langchain.schema import HumanMessage
 
@@ -1048,8 +1048,8 @@ def generate_metadata_for_evaluation_metadata_methodo(eval_row, query_methodo, c
 
 # %% ../nbs/00_core.ipynb 56
 #|eval: true
-#|echo: true
-#|output: true
+#| echo: true
+#|label: generate_metadata_for_evaluation_metadata_evidence
 # evidence
 from langchain.schema import HumanMessage
 
@@ -1127,8 +1127,8 @@ def generate_metadata_for_evaluation_metadata_evidence(eval_row, query, chunk_ta
 
 # %% ../nbs/00_core.ipynb 57
 #|eval: true
-#|echo: true
-#|output: true
+#| echo: true
+#|label: generate_evaluation_metadata
 # process all
 def generate_evaluation_metadata(
     eval_table,

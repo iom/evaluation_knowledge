@@ -110,6 +110,16 @@
     ]
   },
   {
+    "objectID": "core.html#setup",
+    "href": "core.html#setup",
+    "title": "Workflow Description",
+    "section": "Setup",
+    "text": "Setup\n\nCreate a Virtual Environment\nTo ensure a clean and isolated environment for this project, we will create a virtual environment using Python’s venv module. This will help manage dependencies and avoid conflicts with other projects.\n#| eval: false\npython -m venv .venv\nThen, activate the virtual environment:\n#| eval: false\n.\\.venv\\Scripts\\activate\nThen, configure visual Studio Code to use the virtual environment: Open the Command Palette using the shortcut Ctrl+Shift+P and type Jupyter: Select Interpreter and select the interpreter that corresponds to your newly created virtual environment: ('venv': venv).\n\n\nRequired Python Modules\nOnce this environment selected as a kernel to run the notebook, we can install the required python modules the rest of the process:\n%pip install openai  lancedb pyarrow pandas numpy matplotlib seaborn plotly pymupdf requests tqdm tenacity ipython dotenv langchain langchain-community langchain_openai  ipywidgets openpyxl  filetype\nthen Restart the jupyter kernel for this notebook\n#| eval: false\n%reset -f\n\n\nInitialise LLM API\n\nimport os\nfrom dotenv import load_dotenv\n# Load environment variables\nload_dotenv()\n\nfrom langchain_openai import AzureChatOpenAI \n# Initialize LLM with higher temperature for creative question generation\nllm_creative = AzureChatOpenAI(\n    deployment_name=os.getenv(\"AZURE_DEPLOYMENT_NAME\"),\n    api_key=os.getenv(\"AZURE_OPENAI_API_KEY\"),\n    azure_endpoint=os.getenv(\"AZURE_OPENAI_ENDPOINT\"),\n    api_version=os.getenv(\"AZURE_OPENAI_API_VERSION\"),\n    temperature=0.7,\n    max_tokens=500\n)\n\nllm_accurate = AzureChatOpenAI(\n    deployment_name=os.getenv(\"AZURE_DEPLOYMENT_NAME\"),\n    api_key=os.getenv(\"AZURE_OPENAI_API_KEY\"),\n    azure_endpoint=os.getenv(\"AZURE_OPENAI_ENDPOINT\"),\n    api_version=os.getenv(\"AZURE_OPENAI_API_VERSION\"),\n    temperature=0.1,\n    max_tokens=1000\n)\n\n\n\nLoad PDF library and Strategic Results Framework\nThe library\n\nsource\n\n\nload_evaluations\n\n load_evaluations (file_path, json_path)\n\n\nlibrary =load_evaluations(\"reference/Evaluation_repository.xlsx\",\"reference/Evaluation_repository.json\" )\n\nNow the framework\n\nsource\n\n\nload_iom_framework\n\n load_iom_framework (excel_path:str)\n\nLoad and validate IOM framework\n\nframework= load_iom_framework(\"reference/Strategic_Result_Framework.xlsx\")",
+    "crumbs": [
+      "Workflow Description"
+    ]
+  },
+  {
     "objectID": "core.html#step-1-building-the-knowledge-base",
     "href": "core.html#step-1-building-the-knowledge-base",
     "title": "Workflow Description",
@@ -130,13 +140,13 @@
     ]
   },
   {
-    "objectID": "core.html#step-3-organize-the-evidence",
-    "href": "core.html#step-3-organize-the-evidence",
-    "title": "Introduction",
-    "section": "Step 3: Organize the Evidence",
-    "text": "Step 3: Organize the Evidence\ndef extract_information(text):\n    # Use Azure OpenAI to extract information\n    response = openai.Completion.create(\n        engine=\"your-completion-engine\",\n        prompt=f\"Extract information from: {text}\",\n        max_tokens=150\n    )\n    return response.choices[0].text.strip()\n\ndf['structured_info'] = df['text'].apply(extract_information)",
+    "objectID": "core.html#step-3-cross-evaluation-analysis",
+    "href": "core.html#step-3-cross-evaluation-analysis",
+    "title": "Workflow Description",
+    "section": "Step 3: Cross-Evaluation Analysis",
+    "text": "Step 3: Cross-Evaluation Analysis",
     "crumbs": [
-      "Introduction"
+      "Workflow Description"
     ]
   },
   {
@@ -165,26 +175,6 @@
     "title": "Workflow Description",
     "section": "Conclusions - and potential extension…",
     "text": "Conclusions - and potential extension…\n\nWeb interface (Streamlit, Gradio, etc.)\nPeriodic syncing with new evaluations via web scraping\nIntegration with Hugging Face for fine-tuning a summarization or Q&A model",
-    "crumbs": [
-      "Workflow Description"
-    ]
-  },
-  {
-    "objectID": "core.html#setup",
-    "href": "core.html#setup",
-    "title": "Workflow Description",
-    "section": "Setup",
-    "text": "Setup\n\nCreate a Virtual Environment\nTo ensure a clean and isolated environment for this project, we will create a virtual environment using Python’s venv module. This will help manage dependencies and avoid conflicts with other projects.\n#| eval: false\npython -m venv .venv\nThen, activate the virtual environment:\n#| eval: false\n.\\.venv\\Scripts\\activate\nThen, configure visual Studio Code to use the virtual environment: Open the Command Palette using the shortcut Ctrl+Shift+P and type Jupyter: Select Interpreter and select the interpreter that corresponds to your newly created virtual environment: ('venv': venv).\n\n\nRequired Python Modules\nOnce this environment selected as a kernel to run the notebook, we can install the required python modules the rest of the process:\n%pip install openai  lancedb pyarrow pandas numpy matplotlib seaborn plotly pymupdf requests tqdm tenacity ipython dotenv langchain langchain-community langchain_openai  ipywidgets openpyxl  filetype\nthen Restart the jupyter kernel for this notebook\n#| eval: false\n%reset -f\n\n\nInitialise LLM API\n\nimport os\nfrom dotenv import load_dotenv\n# Load environment variables\nload_dotenv()\n\nfrom langchain_openai import AzureChatOpenAI \n# Initialize LLM with higher temperature for creative question generation\nllm_creative = AzureChatOpenAI(\n    deployment_name=os.getenv(\"AZURE_DEPLOYMENT_NAME\"),\n    api_key=os.getenv(\"AZURE_OPENAI_API_KEY\"),\n    azure_endpoint=os.getenv(\"AZURE_OPENAI_ENDPOINT\"),\n    api_version=os.getenv(\"AZURE_OPENAI_API_VERSION\"),\n    temperature=0.7,\n    max_tokens=500\n)\n\nllm_accurate = AzureChatOpenAI(\n    deployment_name=os.getenv(\"AZURE_DEPLOYMENT_NAME\"),\n    api_key=os.getenv(\"AZURE_OPENAI_API_KEY\"),\n    azure_endpoint=os.getenv(\"AZURE_OPENAI_ENDPOINT\"),\n    api_version=os.getenv(\"AZURE_OPENAI_API_VERSION\"),\n    temperature=0.1,\n    max_tokens=1000\n)\n\n\n\nLoad PDF library and Strategic Results Framework\nThe library\n\nsource\n\n\nload_evaluations\n\n load_evaluations (file_path, json_path)\n\n\nlibrary =load_evaluations(\"reference/Evaluation_repository.xlsx\",\"reference/Evaluation_repository.json\" )\n\nNow the framework\n\nsource\n\n\nload_iom_framework\n\n load_iom_framework (excel_path:str)\n\nLoad and validate IOM framework\n\nframework= load_iom_framework(\"reference/Strategic_Result_Framework.xlsx\")",
-    "crumbs": [
-      "Workflow Description"
-    ]
-  },
-  {
-    "objectID": "core.html#step-3-cross-evaluation-analysis",
-    "href": "core.html#step-3-cross-evaluation-analysis",
-    "title": "Workflow Description",
-    "section": "Step 3: Cross-Evaluation Analysis",
-    "text": "Step 3: Cross-Evaluation Analysis",
     "crumbs": [
       "Workflow Description"
     ]
