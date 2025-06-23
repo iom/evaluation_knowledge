@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="A module to turn Evaluation Reports into AI knowledge">
+<meta name="description" content="Instead of spending hours searching through reports asking ‘what worked in similar contexts?’, equip program managers with instant, evidence-based answers.">
 
-<title>evaluation_knowledge</title>
+<title>AI-Assisted Evaluation Evidence Mapping – evaluation_knowledge</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -104,11 +104,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <link rel="stylesheet" href="styles.css">
-<meta property="og:title" content="evaluation_knowledge">
-<meta property="og:description" content="A module to turn Evaluation Reports into AI knowledge">
+<meta property="og:title" content="AI-Assisted Evaluation Evidence Mapping – evaluation_knowledge">
+<meta property="og:description" content="Instead of spending hours searching through reports asking ‘what worked in similar contexts?’, equip program managers with instant, evidence-based answers.">
 <meta property="og:site_name" content="evaluation_knowledge">
-<meta name="twitter:title" content="evaluation_knowledge">
-<meta name="twitter:description" content="A module to turn Evaluation Reports into AI knowledge">
+<meta name="twitter:title" content="AI-Assisted Evaluation Evidence Mapping – evaluation_knowledge">
+<meta name="twitter:description" content="Instead of spending hours searching through reports asking ‘what worked in similar contexts?’, equip program managers with instant, evidence-based answers.">
 <meta name="twitter:card" content="summary">
 </head>
 
@@ -133,7 +133,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">evaluation_knowledge</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">AI-Assisted Evaluation Evidence Mapping</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -148,13 +148,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">evaluation_knowledge</span></a>
+ <span class="menu-text">AI-Assisted Evaluation Evidence Mapping</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./core.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">core</span></a>
+ <span class="menu-text">workflow</span></a>
   </div>
 </li>
     </ul>
@@ -167,16 +167,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#ai-assisted-evaluation-evidence-mapping-for-iom" id="toc-ai-assisted-evaluation-evidence-mapping-for-iom" class="nav-link active" data-scroll-target="#ai-assisted-evaluation-evidence-mapping-for-iom">AI-Assisted Evaluation Evidence Mapping for IOM</a>
-  <ul class="collapse">
-  <li><a href="#introduction" id="toc-introduction" class="nav-link" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
   <li><a href="#some-examples-of-evidence-maps" id="toc-some-examples-of-evidence-maps" class="nav-link" data-scroll-target="#some-examples-of-evidence-maps">Some examples of Evidence Maps:</a></li>
   <li><a href="#about-this-project" id="toc-about-this-project" class="nav-link" data-scroll-target="#about-this-project">About this project</a></li>
   <li><a href="#approach" id="toc-approach" class="nav-link" data-scroll-target="#approach">Approach</a>
   <ul class="collapse">
   <li><a href="#step-1-building-the-knowledge-base" id="toc-step-1-building-the-knowledge-base" class="nav-link" data-scroll-target="#step-1-building-the-knowledge-base">Step 1: Building the Knowledge Base</a></li>
   <li><a href="#step-2-structured-information-extraction" id="toc-step-2-structured-information-extraction" class="nav-link" data-scroll-target="#step-2-structured-information-extraction">Step 2: Structured Information Extraction</a></li>
-  <li><a href="#step-3-organize-and-vet-the-evidence" id="toc-step-3-organize-and-vet-the-evidence" class="nav-link" data-scroll-target="#step-3-organize-and-vet-the-evidence">Step 3: Organize and vet the Evidence</a></li>
+  <li><a href="#step-3-cross-evaluation-analysis" id="toc-step-3-cross-evaluation-analysis" class="nav-link" data-scroll-target="#step-3-cross-evaluation-analysis">Step 3: Cross-Evaluation Analysis</a></li>
   <li><a href="#step-4-generate-actionable-and-generalizable-insights" id="toc-step-4-generate-actionable-and-generalizable-insights" class="nav-link" data-scroll-target="#step-4-generate-actionable-and-generalizable-insights">Step 4: Generate Actionable and Generalizable Insights</a></li>
   <li><a href="#step-5-identify-patterns-and-gaps" id="toc-step-5-identify-patterns-and-gaps" class="nav-link" data-scroll-target="#step-5-identify-patterns-and-gaps">Step 5: Identify Patterns and Gaps</a></li>
   </ul></li>
@@ -191,7 +189,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#documentation" id="toc-documentation" class="nav-link" data-scroll-target="#documentation">Documentation</a></li>
   </ul></li>
   <li><a href="#how-to-use" id="toc-how-to-use" class="nav-link" data-scroll-target="#how-to-use">How to use</a></li>
-  </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/iom/evaluation_knowledge/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="index.html.md"><i class="bi bi-file-code"></i>CommonMark</a></li></ul></div></nav>
     </div>
@@ -200,12 +197,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">evaluation_knowledge</h1>
+<h1 class="title">AI-Assisted Evaluation Evidence Mapping</h1>
 </div>
 
 <div>
   <div class="description">
-    A module to turn Evaluation Reports into AI knowledge
+    Instead of spending hours searching through reports asking ‘<em>what worked in similar contexts?</em>’, equip program managers with instant, evidence-based answers.
   </div>
 </div>
 
@@ -223,12 +220,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
-<section id="ai-assisted-evaluation-evidence-mapping-for-iom" class="level1">
-<h1>AI-Assisted Evaluation Evidence Mapping for IOM</h1>
 <section id="introduction" class="level2">
 <h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
-<p>An <strong>Evidence Map</strong> is a structured, visual tool that organizes what we know—and don’t know—about programs, policies, and interventions. Think of it as a research and evaluation landscape that helps understand how the evidence available is distributed against a framework of reference: for example, the Sustainable Development Goals.</p>
-<p>It allows us to quickly identify:</p>
+<p>An <strong>Evidence Map</strong> is a structured, visual tool that organizes what we know—and don’t know—about programs, policies, and interventions. Think of it as a research and evaluation landscape that helps understand how the evidence available is distributed against a framework of reference: for example, the Sustainable Development Goals:</p>
 <ul>
 <li>Which interventions have been evaluated<br>
 </li>
@@ -239,6 +233,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Where critical knowledge gaps remain</li>
 </ul>
 <p>This approach is especially valuable for evidence-informed project design, particularly when time or resources limit the ability to read through hundreds of individual evaluation reports.</p>
+<p>More than just tagging content, the system smartly extracts the ‘why’ behind program success - not just outcomes, but mechanisms, required conditions, and implementation factors. This means better program design, faster proposal development, and fewer repeated mistakes. Evaluations become a <strong>living knowledge base</strong> that actually gets used. This project shall enhance the speed and quality of learning. Instead of each organization reinventing the wheel or making the same mistakes, we’d have:</p>
+<ul>
+<li>Real-time access to “what worked where and why”</li>
+<li>Faster identification of promising approaches to test</li>
+<li>Better understanding of when and how to adapt programs</li>
+</ul>
+<p>This tool could fundamentally change how evidence flows through the humanitarian system - from slow, siloed learning to rapid, networked knowledge sharing.</p>
 </section>
 <section id="some-examples-of-evidence-maps" class="level2">
 <h2 class="anchored" data-anchor-id="some-examples-of-evidence-maps">Some examples of Evidence Maps:</h2>
@@ -290,6 +291,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="step-2-structured-information-extraction" class="level3">
 <h3 class="anchored" data-anchor-id="step-2-structured-information-extraction">Step 2: Structured Information Extraction</h3>
+<p>Instead of just summarizing each evaluation report, we use AI to answer these same questions for every single evaluation. This creates comparable data across all studies.</p>
 <p>We will create a set of plain-language questions, reflecting the entire IOM Results Framework. Using AI tools, we will extract consistent and comparable data from each report:</p>
 <ul>
 <li><strong>Program details</strong> (what was implemented)<br>
@@ -304,8 +306,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <hr>
 </section>
-<section id="step-3-organize-and-vet-the-evidence" class="level3">
-<h3 class="anchored" data-anchor-id="step-3-organize-and-vet-the-evidence">Step 3: Organize and vet the Evidence</h3>
+<section id="step-3-cross-evaluation-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="step-3-cross-evaluation-analysis">Step 3: Cross-Evaluation Analysis</h3>
 <p>We will then run those questions through the vector database to generate answers based first on each evaluation.</p>
 <p>This will allow to categorize the data within a structured framework:</p>
 <ol type="1">
@@ -374,7 +376,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="developer-guide" class="level2">
 <h2 class="anchored" data-anchor-id="developer-guide">Developer Guide</h2>
-<p>If you are new to using <code>nbdev</code> here are some useful pointers to get you started.</p>
+<p>This module implements a Literate Programming approach, which means:</p>
+<ul>
+<li><strong>Documentation</strong>: Each handler serves as comprehensive documentation.</li>
+<li><strong>Code Reference</strong>: The notebooks contain the actual implementation code.</li>
+<li><strong>Communication Tool</strong>: They facilitate discussions with data providers about discrepancies or inconsistencies.</li>
+</ul>
+<p>If you are new to using <code>nbdev</code>, here are <a href="https://nbdev.fast.ai/tutorials/tutorial.html">some useful pointers to get you started</a>.</p>
 <section id="install-evaluation_knowledge-in-development-mode" class="level3">
 <h3 class="anchored" data-anchor-id="install-evaluation_knowledge-in-development-mode">Install evaluation_knowledge in Development mode</h3>
 <div class="sourceCode" id="cb1"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># make sure evaluation_knowledge package is installed in development mode</span></span>
@@ -411,7 +419,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ol>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->

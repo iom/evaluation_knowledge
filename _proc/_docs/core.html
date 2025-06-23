@@ -6,9 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="description" content="Fill in a module description here">
 
-<title>core – evaluation_knowledge</title>
+<title>workflow – evaluation_knowledge</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -70,11 +103,11 @@ ul.task-list li input[type="checkbox"] {
 
 
 <link rel="stylesheet" href="styles.css">
-<meta property="og:title" content="core – evaluation_knowledge">
-<meta property="og:description" content="Fill in a module description here">
+<meta property="og:title" content="workflow – evaluation_knowledge">
+<meta property="og:description" content="A module to turn Evaluation Reports into AI knowledge">
 <meta property="og:site_name" content="evaluation_knowledge">
-<meta name="twitter:title" content="core – evaluation_knowledge">
-<meta name="twitter:description" content="Fill in a module description here">
+<meta name="twitter:title" content="workflow – evaluation_knowledge">
+<meta name="twitter:description" content="A module to turn Evaluation Reports into AI knowledge">
 <meta name="twitter:card" content="summary">
 </head>
 
@@ -99,7 +132,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./core.html">core</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./core.html">workflow</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -114,13 +147,13 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">evaluation_knowledge</span></a>
+ <span class="menu-text">AI-Assisted Evaluation Evidence Mapping</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./core.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">core</span></a>
+ <span class="menu-text">workflow</span></a>
   </div>
 </li>
     </ul>
@@ -133,7 +166,51 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#foo" id="toc-foo" class="nav-link active" data-scroll-target="#foo">foo</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#setup" id="toc-setup" class="nav-link" data-scroll-target="#setup">Setup</a>
+  <ul class="collapse">
+  <li><a href="#create-a-virtual-environment" id="toc-create-a-virtual-environment" class="nav-link" data-scroll-target="#create-a-virtual-environment">Create a Virtual Environment</a></li>
+  <li><a href="#required-python-modules" id="toc-required-python-modules" class="nav-link" data-scroll-target="#required-python-modules">Required Python Modules</a></li>
+  <li><a href="#initialise-llm-api" id="toc-initialise-llm-api" class="nav-link" data-scroll-target="#initialise-llm-api">Initialise LLM API</a></li>
+  <li><a href="#load-pdf-library-and-strategic-results-framework" id="toc-load-pdf-library-and-strategic-results-framework" class="nav-link" data-scroll-target="#load-pdf-library-and-strategic-results-framework">Load PDF library and Strategic Results Framework</a></li>
+  <li><a href="#load_evaluations" id="toc-load_evaluations" class="nav-link" data-scroll-target="#load_evaluations">load_evaluations</a></li>
+  <li><a href="#load_iom_framework" id="toc-load_iom_framework" class="nav-link" data-scroll-target="#load_iom_framework">load_iom_framework</a></li>
+  </ul></li>
+  <li><a href="#step-1-building-the-knowledge-base" id="toc-step-1-building-the-knowledge-base" class="nav-link" data-scroll-target="#step-1-building-the-knowledge-base">Step 1: Building the Knowledge Base</a>
+  <ul class="collapse">
+  <li><a href="#initialize-lancedb-vector-database" id="toc-initialize-lancedb-vector-database" class="nav-link" data-scroll-target="#initialize-lancedb-vector-database">Initialize LanceDB Vector Database</a></li>
+  <li><a href="#load_evaluations-1" id="toc-load_evaluations-1" class="nav-link" data-scroll-target="#load_evaluations-1">load_evaluations</a></li>
+  <li><a href="#generate_id" id="toc-generate_id" class="nav-link" data-scroll-target="#generate_id">generate_id</a></li>
+  <li><a href="#force_delete_directory" id="toc-force_delete_directory" class="nav-link" data-scroll-target="#force_delete_directory">force_delete_directory</a></li>
+  <li><a href="#initialise_knowledge_base" id="toc-initialise_knowledge_base" class="nav-link" data-scroll-target="#initialise_knowledge_base">initialise_knowledge_base</a></li>
+  <li><a href="#safe_get" id="toc-safe_get" class="nav-link" data-scroll-target="#safe_get">safe_get</a></li>
+  <li><a href="#download-and-prepare-all-the-files" id="toc-download-and-prepare-all-the-files" class="nav-link" data-scroll-target="#download-and-prepare-all-the-files">Download and prepare all the files</a></li>
+  <li><a href="#download_documents" id="toc-download_documents" class="nav-link" data-scroll-target="#download_documents">download_documents</a></li>
+  <li><a href="#convert_file_to_pdf" id="toc-convert_file_to_pdf" class="nav-link" data-scroll-target="#convert_file_to_pdf">convert_file_to_pdf</a></li>
+  <li><a href="#find_libreoffice_exec" id="toc-find_libreoffice_exec" class="nav-link" data-scroll-target="#find_libreoffice_exec">find_libreoffice_exec</a></li>
+  <li><a href="#now-load-file-content-in-the-vector-db-chunk-and-embedd" id="toc-now-load-file-content-in-the-vector-db-chunk-and-embedd" class="nav-link" data-scroll-target="#now-load-file-content-in-the-vector-db-chunk-and-embedd">Now load file content in the vector DB, chunk and embedd</a></li>
+  <li><a href="#process_documents_to_chunks" id="toc-process_documents_to_chunks" class="nav-link" data-scroll-target="#process_documents_to_chunks">process_documents_to_chunks</a></li>
+  <li><a href="#check_chunk_status" id="toc-check_chunk_status" class="nav-link" data-scroll-target="#check_chunk_status">check_chunk_status</a></li>
+  <li><a href="#generating-ai-enhanced-metadata" id="toc-generating-ai-enhanced-metadata" class="nav-link" data-scroll-target="#generating-ai-enhanced-metadata">Generating AI-Enhanced metadata</a></li>
+  <li><a href="#get_context_for_eval" id="toc-get_context_for_eval" class="nav-link" data-scroll-target="#get_context_for_eval">get_context_for_eval</a></li>
+  <li><a href="#call_llm_with_retries" id="toc-call_llm_with_retries" class="nav-link" data-scroll-target="#call_llm_with_retries">call_llm_with_retries</a></li>
+  <li><a href="#safe_join" id="toc-safe_join" class="nav-link" data-scroll-target="#safe_join">safe_join</a></li>
+  <li><a href="#clean_json" id="toc-clean_json" class="nav-link" data-scroll-target="#clean_json">clean_json</a></li>
+  <li><a href="#generate_metadata_for_evaluation_metadata_descriptive" id="toc-generate_metadata_for_evaluation_metadata_descriptive" class="nav-link" data-scroll-target="#generate_metadata_for_evaluation_metadata_descriptive">generate_metadata_for_evaluation_metadata_descriptive</a></li>
+  <li><a href="#generate_metadata_for_evaluation_metadata_methodo" id="toc-generate_metadata_for_evaluation_metadata_methodo" class="nav-link" data-scroll-target="#generate_metadata_for_evaluation_metadata_methodo">generate_metadata_for_evaluation_metadata_methodo</a></li>
+  <li><a href="#generate_metadata_for_evaluation_metadata_evidence" id="toc-generate_metadata_for_evaluation_metadata_evidence" class="nav-link" data-scroll-target="#generate_metadata_for_evaluation_metadata_evidence">generate_metadata_for_evaluation_metadata_evidence</a></li>
+  <li><a href="#generate_evaluation_metadata" id="toc-generate_evaluation_metadata" class="nav-link" data-scroll-target="#generate_evaluation_metadata">generate_evaluation_metadata</a></li>
+  </ul></li>
+  <li><a href="#step-2-structured-information-extraction" id="toc-step-2-structured-information-extraction" class="nav-link" data-scroll-target="#step-2-structured-information-extraction">Step 2: Structured Information Extraction</a>
+  <ul class="collapse">
+  <li><a href="#standard-questions" id="toc-standard-questions" class="nav-link" data-scroll-target="#standard-questions">Standard Questions</a></li>
+  <li><a href="#qa-extraction" id="toc-qa-extraction" class="nav-link" data-scroll-target="#qa-extraction">Q&amp;A Extraction</a></li>
+  <li><a href="#hybrid-search-in-lancedb" id="toc-hybrid-search-in-lancedb" class="nav-link" data-scroll-target="#hybrid-search-in-lancedb">Hybrid Search in LanceDB</a></li>
+  </ul></li>
+  <li><a href="#step-3-cross-evaluation-analysis" id="toc-step-3-cross-evaluation-analysis" class="nav-link" data-scroll-target="#step-3-cross-evaluation-analysis">Step 3: Cross-Evaluation Analysis</a></li>
+  <li><a href="#step-4-generate-actionable-and-generalizable-insights" id="toc-step-4-generate-actionable-and-generalizable-insights" class="nav-link" data-scroll-target="#step-4-generate-actionable-and-generalizable-insights">Step 4: Generate Actionable and Generalizable Insights</a></li>
+  <li><a href="#step-5-identify-patterns-and-gaps" id="toc-step-5-identify-patterns-and-gaps" class="nav-link" data-scroll-target="#step-5-identify-patterns-and-gaps">Step 5: Identify Patterns and Gaps</a></li>
+  <li><a href="#conclusions---and-potential-extension" id="toc-conclusions---and-potential-extension" class="nav-link" data-scroll-target="#conclusions---and-potential-extension">Conclusions - and potential extension…</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/iom/evaluation_knowledge/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="core.html.md"><i class="bi bi-file-code"></i>CommonMark</a></li></ul></div></nav>
     </div>
@@ -142,14 +219,9 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">core</h1>
+<h1 class="title">workflow</h1>
 </div>
 
-<div>
-  <div class="description">
-    Fill in a module description here
-  </div>
-</div>
 
 
 <div class="quarto-title-meta">
@@ -165,12 +237,1039 @@ ul.task-list li input[type="checkbox"] {
 
 
 <!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
+<p>An <strong>Evaluation Evidence Map</strong> is a structured, visual tool that organizes what we know—and don’t know—about programs, policies, and interventions. Think of it as a research landscape that helps decision-makers quickly understand:</p>
+<ul>
+<li>Which interventions have been evaluated<br>
+</li>
+<li>Where they were implemented<br>
+</li>
+<li>What outcomes were observed<br>
+</li>
+<li>Where critical knowledge gaps remain</li>
+</ul>
+<p>This approach is especially valuable for evidence-informed project design, particularly when time or resources limit the ability to read through hundreds of individual evaluation reports (see <a href="https://evaluationreports.unicef.org/app/evaluation-evidence-gap-map.html">UNICEF Evidence Map example</a>).</p>
+<p>The goal of this exercise is to inform future evaluation design, guide strategic planning, and support the development of robust, evidence-based project proposals and strategic plan.</p>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>This notebook implements an evidence mapping system with: - Batch processing for scalability - Robust error handling and retries - Embedding caching - Hybrid search (vector + full-text) - Local LanceDB deployment</p>
+<p>we can follow these steps:</p>
+<ul>
+<li>Load the JSON file containing the URLs of the PDF reports.</li>
+<li>Load the Excel file describing the IOM Results Framework.</li>
+<li>Download and process the PDF reports to extract text.</li>
+<li>Integrate the extracted text with the IOM Results Framework.</li>
+<li>Generate embeddings and store them in LanceDB.</li>
+</ul>
+</section>
+<section id="setup" class="level2">
+<h2 class="anchored" data-anchor-id="setup">Setup</h2>
+<section id="create-a-virtual-environment" class="level3">
+<h3 class="anchored" data-anchor-id="create-a-virtual-environment">Create a Virtual Environment</h3>
+<p>To ensure a clean and isolated environment for this project, we will create a virtual environment using Python’s <code>venv</code> module. This will help manage dependencies and avoid conflicts with other projects.</p>
+<pre class="{bash}"><code>#| eval: false
+python -m venv .venv</code></pre>
+<p>Then, activate the virtual environment:</p>
+<pre class="{bash}"><code>#| eval: false
+.\.venv\Scripts\activate</code></pre>
+<p>Then, configure visual Studio Code to use the virtual environment: Open the Command Palette using the shortcut <code>Ctrl+Shift+P</code> and type <code>Jupyter: Select Interpreter</code> and select the interpreter that corresponds to your newly created virtual environment: <code>('venv': venv)</code>.</p>
+</section>
+<section id="required-python-modules" class="level3">
+<h3 class="anchored" data-anchor-id="required-python-modules">Required Python Modules</h3>
+<p>Once this environment selected as a kernel to run the notebook, we can install the required python modules the rest of the process:</p>
+<pre class="{python}"><code>%pip install openai  lancedb pyarrow pandas numpy matplotlib seaborn plotly pymupdf requests tqdm tenacity ipython dotenv langchain langchain-community langchain_openai  ipywidgets openpyxl  filetype</code></pre>
+<p>then Restart the jupyter kernel for this notebook</p>
+<pre class="{python}"><code>#| eval: false
+%reset -f</code></pre>
+</section>
+<section id="initialise-llm-api" class="level3">
+<h3 class="anchored" data-anchor-id="initialise-llm-api">Initialise LLM API</h3>
+</section>
+<section id="load-pdf-library-and-strategic-results-framework" class="level3">
+<h3 class="anchored" data-anchor-id="load-pdf-library-and-strategic-results-framework">Load PDF library and Strategic Results Framework</h3>
+<p>The library</p>
 <hr>
-<section id="foo" class="level3">
-<h3 class="anchored" data-anchor-id="foo">foo</h3>
+<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L139" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="load_evaluations" class="level3">
+<h3 class="anchored" data-anchor-id="load_evaluations">load_evaluations</h3>
 <blockquote class="blockquote">
-<pre><code> foo ()</code></pre>
+<pre><code> load_evaluations (file_path, json_path)</code></pre>
 </blockquote>
+<div id="cell-6" class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>library <span class="op">=</span>load_evaluations(<span class="st">"reference/Evaluation_repository.xlsx"</span>,<span class="st">"reference/Evaluation_repository.json"</span> )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now the framework</p>
+<hr>
+<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L121" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="load_iom_framework" class="level3">
+<h3 class="anchored" data-anchor-id="load_iom_framework">load_iom_framework</h3>
+<blockquote class="blockquote">
+<pre><code> load_iom_framework (excel_path:str)</code></pre>
+</blockquote>
+<p><em>Load and validate IOM framework</em></p>
+<div id="cell-9" class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>framework<span class="op">=</span> load_iom_framework(<span class="st">"reference/Strategic_Result_Framework.xlsx"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="step-1-building-the-knowledge-base" class="level2">
+<h2 class="anchored" data-anchor-id="step-1-building-the-knowledge-base">Step 1: Building the Knowledge Base</h2>
+<p>So we have a collection of Evaluation documents. We have metadata for each Evaluation. For each evaluation, we have multiple documents (The evaluation report itslef, plus in some case: a summary brief, annexes, etc.)</p>
+<p>See an example below</p>
+<div id="cell-11" class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>[</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Title"</span>: <span class="st">"Finale Internal Evluation: ENHANCING THE CAPACITY TO MAINSTREAM ENVIRONMENT AND CLIMATE CHANGE WITHIN WIDER FRAMEWORK OF MIGRATION MANAGEMENT IN WEST AND CENTRAL AFRICA"</span>,</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Year"</span>: <span class="st">"2022"</span>,</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Author"</span>: <span class="st">"Abderrahim El Moulat"</span>,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Best Practices or Lessons Learnt"</span>: <span class="st">"Yes"</span>,</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Date of Publication"</span>: <span class="st">"2022-06-22 00:00:00"</span>,</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Donor"</span>: <span class="st">"IOM Development Fund"</span>,</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Evaluation Brief"</span>: <span class="st">"Yes"</span>,</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Evaluation Commissioner"</span>: <span class="st">"Donor, IOM"</span>,</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Evaluation Coverage"</span>: <span class="st">"Country"</span>,</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Evaluation Period From Date"</span>: <span class="st">"nan"</span>,</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Evaluation Period To Date"</span>: <span class="st">"NaT"</span>,</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Executive Summary"</span>: <span class="st">"Yes"</span>,</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>        <span class="st">"External Version of the Report"</span>: <span class="st">"No"</span>,</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Languages"</span>: <span class="st">"English"</span>,</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Migration Thematic Areas"</span>: <span class="st">"Migration and climate change"</span>,</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Name of Project(s) Being Evaluated"</span>: NaN,</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Number of Pages Excluding annexes"</span>: <span class="fl">20.0</span>,</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Other Documents Included"</span>: NaN,</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Project Code"</span>: <span class="st">"NC.0030"</span>,</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Countries Covered"</span>: [</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Senegal"</span></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>        ],</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Regions Covered"</span>: <span class="st">"RO Dakar"</span>,</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Relevant Crosscutting Themes"</span>: <span class="st">"Gender"</span>,</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Report Published"</span>: <span class="st">"Yes"</span>,</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Terms of Reference"</span>: <span class="st">"No"</span>,</span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Type of Evaluation Scope"</span>: <span class="st">"Programme/Project"</span>,</span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Type of Evaluation Timing"</span>: <span class="st">"Ex-post (after the end of the project/programme)"</span>,</span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Type of Evaluator"</span>: <span class="st">"Internal"</span>,</span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Level of Evaluation"</span>: <span class="st">"Decentralized"</span>,</span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Documents"</span>: [</span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>            {</span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>                <span class="st">"Document Subtype"</span>: <span class="st">"Evaluation brief"</span>,</span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>                <span class="st">"File URL"</span>: <span class="st">"https://evaluation.iom.int/sites/g/files/tmzbdl151/files/docs/resources/Internal</span><span class="sc">%20E</span><span class="st">valuation_NC0030_JUNE_2022_FINAL_Abderrahim</span><span class="sc">%20E</span><span class="st">L%20MOULAT_0.pdf"</span>,</span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>                <span class="st">"File description"</span>: <span class="st">"Evaluation Brief"</span></span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a>            },</span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a>            {</span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a>                <span class="st">"Document Subtype"</span>: <span class="st">"Evaluation report"</span>,</span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a>                <span class="st">"File URL"</span>: <span class="st">"https://evaluation.iom.int/sites/g/files/tmzbdl151/files/docs/resources/NC0030_Evaluation%20Brief_June%202022_Abderrahim</span><span class="sc">%20E</span><span class="st">L%20MOULAT.pdf"</span>,</span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a>                <span class="st">"File description"</span>: <span class="st">"Evaluation Report"</span></span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a>            }</span>
+<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a>        ]</span>
+<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Title"</span>: <span class="st">"Local Authorities Network for Migration and Development"</span>,</span>
+<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Year"</span>: <span class="st">"2022"</span>,</span>
+<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Author"</span>: <span class="st">"Action Research for CO-development (ARCO)"</span>,</span>
+<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Best Practices or Lessons Learnt"</span>: <span class="st">"No"</span>,</span>
+<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Date of Publication"</span>: <span class="st">"2022-02-01 00:00:00"</span>,</span>
+<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Donor"</span>: <span class="st">"Government of Italy"</span>,</span>
+<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Evaluation Brief"</span>: <span class="st">"No"</span>,</span>
+<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Evaluation Commissioner"</span>: <span class="st">"IOM"</span>,</span>
+<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Evaluation Coverage"</span>: <span class="st">"Multi-country"</span>,</span>
+<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Evaluation Period From Date"</span>: <span class="st">"2020-07-06 00:00:00"</span>,</span>
+<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Evaluation Period To Date"</span>: <span class="st">"2021-07-31 00:00:00"</span>,</span>
+<span id="cb9-58"><a href="#cb9-58" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Executive Summary"</span>: <span class="st">"Yes"</span>,</span>
+<span id="cb9-59"><a href="#cb9-59" aria-hidden="true" tabindex="-1"></a>        <span class="st">"External Version of the Report"</span>: <span class="st">"No"</span>,</span>
+<span id="cb9-60"><a href="#cb9-60" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Languages"</span>: <span class="st">"English"</span>,</span>
+<span id="cb9-61"><a href="#cb9-61" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Migration Thematic Areas"</span>: <span class="st">"Migration and Development - diaspora"</span>,</span>
+<span id="cb9-62"><a href="#cb9-62" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Name of Project(s) Being Evaluated"</span>: NaN,</span>
+<span id="cb9-63"><a href="#cb9-63" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Number of Pages Excluding annexes"</span>: <span class="fl">37.0</span>,</span>
+<span id="cb9-64"><a href="#cb9-64" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Other Documents Included"</span>: NaN,</span>
+<span id="cb9-65"><a href="#cb9-65" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Project Code"</span>: <span class="st">"MD.0003"</span>,</span>
+<span id="cb9-66"><a href="#cb9-66" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Countries Covered"</span>: [</span>
+<span id="cb9-67"><a href="#cb9-67" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Albania"</span>,</span>
+<span id="cb9-68"><a href="#cb9-68" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Italy"</span></span>
+<span id="cb9-69"><a href="#cb9-69" aria-hidden="true" tabindex="-1"></a>        ],</span>
+<span id="cb9-70"><a href="#cb9-70" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Regions Covered"</span>: <span class="st">"RO Brussels"</span>,</span>
+<span id="cb9-71"><a href="#cb9-71" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Relevant Crosscutting Themes"</span>: <span class="st">"Gender, Rights-based approach"</span>,</span>
+<span id="cb9-72"><a href="#cb9-72" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Report Published"</span>: <span class="st">"No"</span>,</span>
+<span id="cb9-73"><a href="#cb9-73" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Terms of Reference"</span>: <span class="st">"Yes"</span>,</span>
+<span id="cb9-74"><a href="#cb9-74" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Type of Evaluation Scope"</span>: <span class="st">"Programme/Project"</span>,</span>
+<span id="cb9-75"><a href="#cb9-75" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Type of Evaluation Timing"</span>: <span class="st">"Final (at the end of the project/programme)"</span>,</span>
+<span id="cb9-76"><a href="#cb9-76" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Type of Evaluator"</span>: <span class="st">"External"</span>,</span>
+<span id="cb9-77"><a href="#cb9-77" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Level of Evaluation"</span>: <span class="st">"Decentralized"</span>,</span>
+<span id="cb9-78"><a href="#cb9-78" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Documents"</span>: [</span>
+<span id="cb9-79"><a href="#cb9-79" aria-hidden="true" tabindex="-1"></a>            {</span>
+<span id="cb9-80"><a href="#cb9-80" aria-hidden="true" tabindex="-1"></a>                <span class="st">"Document Subtype"</span>: <span class="st">"Evaluation report"</span>,</span>
+<span id="cb9-81"><a href="#cb9-81" aria-hidden="true" tabindex="-1"></a>                <span class="st">"File URL"</span>: <span class="st">"https://evaluation.iom.int/sites/g/files/tmzbdl151/files/docs/resources/Evaluation%20Brief_ARCO_Shiraz%20JERBI.pdF"</span>,</span>
+<span id="cb9-82"><a href="#cb9-82" aria-hidden="true" tabindex="-1"></a>                <span class="st">"File description"</span>: <span class="st">"Evaluation Report "</span></span>
+<span id="cb9-83"><a href="#cb9-83" aria-hidden="true" tabindex="-1"></a>            },</span>
+<span id="cb9-84"><a href="#cb9-84" aria-hidden="true" tabindex="-1"></a>            {</span>
+<span id="cb9-85"><a href="#cb9-85" aria-hidden="true" tabindex="-1"></a>                <span class="st">"Document Subtype"</span>: <span class="st">"Evaluation brief"</span>,</span>
+<span id="cb9-86"><a href="#cb9-86" aria-hidden="true" tabindex="-1"></a>                <span class="st">"File URL"</span>: <span class="st">"https://evaluation.iom.int/sites/g/files/tmzbdl151/files/docs/resources/Final</span><span class="sc">%20e</span><span class="st">valuation</span><span class="sc">%20r</span><span class="st">eport_ARCO_Shiraz%20JERBI_1.pdf"</span>,</span>
+<span id="cb9-87"><a href="#cb9-87" aria-hidden="true" tabindex="-1"></a>                <span class="st">"File description"</span>: <span class="st">"Evaluation Brief"</span></span>
+<span id="cb9-88"><a href="#cb9-88" aria-hidden="true" tabindex="-1"></a>            },</span>
+<span id="cb9-89"><a href="#cb9-89" aria-hidden="true" tabindex="-1"></a>            {</span>
+<span id="cb9-90"><a href="#cb9-90" aria-hidden="true" tabindex="-1"></a>                <span class="st">"Document Subtype"</span>: <span class="st">"Management response"</span>,</span>
+<span id="cb9-91"><a href="#cb9-91" aria-hidden="true" tabindex="-1"></a>                <span class="st">"File URL"</span>: <span class="st">"https://evaluation.iom.int/sites/g/files/tmzbdl151/files/docs/resources/Management%20Response%20Matrix_ARCO_Shiraz%20JERBI.pdf"</span>,</span>
+<span id="cb9-92"><a href="#cb9-92" aria-hidden="true" tabindex="-1"></a>                <span class="st">"File description"</span>: <span class="st">"Management Response"</span></span>
+<span id="cb9-93"><a href="#cb9-93" aria-hidden="true" tabindex="-1"></a>            }</span>
+<span id="cb9-94"><a href="#cb9-94" aria-hidden="true" tabindex="-1"></a>        ]</span>
+<span id="cb9-95"><a href="#cb9-95" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb9-96"><a href="#cb9-96" aria-hidden="true" tabindex="-1"></a>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Workflow Overview</p>
+<ol type="1">
+<li>Load external metadata for one evaluations as per json file.</li>
+<li>Then for each evaluation, download the file, convert it to PDF (in case it’s a word, excel or ppt), and load text for each document.</li>
+<li>Then implement a <a href="https://isaacflath.com/blog/blog_post?fpath=posts%2F2025-04-08-LateChunking.ipynb">late chunking that can solve the lost context problem</a> and insert in chunk table, enabling <a href="https://docs.lancedb.com/core/hybrid-search">Hybrid Search capability</a> so that search can be made based on both key words and similirarity.</li>
+<li>Create additional metadata for both documents and for evaluation using an LLM call. the additional metadata shall help to define an asesssment of the “evidence strenght”. The metadata to be created are - evaluation type (formative, summative, impact), Methodology, study design, sample size, and data collection techniques</li>
+</ol>
+<section id="initialize-lancedb-vector-database" class="level3">
+<h3 class="anchored" data-anchor-id="initialize-lancedb-vector-database">Initialize LanceDB Vector Database</h3>
+<p>The database includes 23 tables:</p>
+<p><strong>1. Evaluations Table</strong> Each row represents a unique evaluation with the following fields:</p>
+<ul>
+<li>evaluation_id (unique identifier)</li>
+<li>title</li>
+<li>author</li>
+<li>practice_or_lessons</li>
+<li>donor</li>
+<li>is_brief</li>
+<li>commissioner</li>
+<li>coverage</li>
+<li>countries</li>
+<li>from_date</li>
+<li>to_date</li>
+<li>has_summary</li>
+<li>external_version</li>
+<li>language</li>
+<li>thematic_area</li>
+<li>name_project</li>
+<li>project_code</li>
+<li>evaluation_scope</li>
+<li>evaluation_timing</li>
+<li>evaluation_level</li>
+<li>evaluator_type</li>
+<li>theme</li>
+<li>cross_cutting</li>
+</ul>
+<p>additional variable will be generated through an LLM prompt on the entire evaluation content</p>
+<ul>
+<li>short_title</li>
+<li>summary</li>
+<li>population (PICO model)</li>
+<li>intervention (PICO model)</li>
+<li>comparator (PICO model)</li>
+<li>outcome (PICO model)</li>
+<li>methodology</li>
+<li>study_type</li>
+<li>study_design</li>
+<li>sample_size</li>
+<li>data_collection_techniques</li>
+<li>evidence_strength</li>
+<li>limitations</li>
+</ul>
+<p><strong>2. Documents Table</strong></p>
+<p>Each row represents a PDF file linked to an evaluation:</p>
+<ul>
+<li>document_id: Primary key ID of the original PDF</li>
+<li>evaluation_id: foreign key to link to the evaluation</li>
+<li>document_subtype: from the original metadata</li>
+<li>document_url: from the original metadata</li>
+<li>document_name: from the original metadata</li>
+<li>document_tite: document type as reviewed by the LLM</li>
+<li>document_type_infer: document type as reviewed by the LLM</li>
+<li>document_processed: boolean to confirm it is done</li>
+</ul>
+<p><strong>3. Chunk Table</strong> * chunk_id: Primary key<br>
+* evaluation_id: foreign key to link to the evaluation * document_id: ID of the original file * document_page: for proper referencing of any further information retrieval * chunk_index: order of the chunk in the document * text: the chunked content * embedding (for hybrid search)</p>
+<p>Let’s start by loading the library from json…</p>
+<hr>
+<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L139" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="load_evaluations-1" class="level3">
+<h3 class="anchored" data-anchor-id="load_evaluations-1">load_evaluations</h3>
+<blockquote class="blockquote">
+<pre><code> load_evaluations (json_path:str)</code></pre>
+</blockquote>
+<p>*Load evaluation data from a JSON file</p>
+<p>Args: json_path: Path to the JSON file containing evaluation data</p>
+<p>Returns: List of evaluation dictionaries*</p>
+<p>Load a small subset for testing..</p>
+<div id="cell-16" class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load your   metadata</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co">#evaluation_data =  load_evaluations("reference/Evaluation_repository_test.json")</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>evaluation_data <span class="op">=</span>  load_evaluations(<span class="st">"reference/Evaluation_repository.json"</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Attribute name is: </span><span class="sc">{</span>evaluation_data<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">type</span>(evaluation_data))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Id Generation</p>
+<hr>
+<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L173" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="generate_id" class="level3">
+<h3 class="anchored" data-anchor-id="generate_id">generate_id</h3>
+<blockquote class="blockquote">
+<pre><code> generate_id (text:str)</code></pre>
+</blockquote>
+<p><em>Generate a deterministic ID from text</em></p>
+<div id="cell-19" class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>eval_id <span class="op">=</span> generate_id( <span class="st">"aaa"</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>({eval_id})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<hr>
+<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L183" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="force_delete_directory" class="level3">
+<h3 class="anchored" data-anchor-id="force_delete_directory">force_delete_directory</h3>
+<blockquote class="blockquote">
+<pre><code> force_delete_directory (path, max_retries=3, delay=1)</code></pre>
+</blockquote>
+<p><em>Robust directory deletion with retries and delay</em></p>
+<div id="cell-21" class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>force_delete_directory(LANCE_DB_PATH)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We start prefilling our vector database with the metadata</p>
+<hr>
+<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L212" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="initialise_knowledge_base" class="level3">
+<h3 class="anchored" data-anchor-id="initialise_knowledge_base">initialise_knowledge_base</h3>
+<blockquote class="blockquote">
+<pre><code> initialise_knowledge_base (db, evaluation:Dict)</code></pre>
+</blockquote>
+<p><em>Store full documents without chunking (late chunking approach)</em></p>
+<hr>
+<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L205" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="safe_get" class="level3">
+<h3 class="anchored" data-anchor-id="safe_get">safe_get</h3>
+<blockquote class="blockquote">
+<pre><code> safe_get (d, key, default=None)</code></pre>
+</blockquote>
+<p><em>Safely get value from dict, handle NaN and missing keys</em></p>
+<div id="cell-25" class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>LANCE_DB_PATH <span class="op">=</span> <span class="st">"./lancedb"</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>db <span class="op">=</span> <span class="ex">connect</span>(LANCE_DB_PATH)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> evaluation <span class="kw">in</span> evaluation_data:  <span class="co"># Assuming evaluation_data is a list</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    initialise_knowledge_base(db, evaluation)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let’s check each evaluation is in the DB -</p>
+<div id="cell-27" class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>eval_table <span class="op">=</span> db.open_table(<span class="st">"evaluations"</span>)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co">#  Convert to Pandas DataFrame (recommended for display)</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> eval_table.to_pandas()</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>and the corresponding documents…</p>
+<div id="cell-29" class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>LANCE_DB_PATH <span class="op">=</span> <span class="st">"./lancedb"</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> lancedb <span class="im">import</span> <span class="ex">connect</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>db <span class="op">=</span> <span class="ex">connect</span>(LANCE_DB_PATH)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>doc_table <span class="op">=</span> db.open_table(<span class="st">"documents"</span>)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="co">#  Convert to Pandas DataFrame (recommended for display)</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> doc_table.to_pandas()</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df)</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="co"># this table includes document_id, url, and evaluation_id</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="download-and-prepare-all-the-files" class="level3">
+<h3 class="anchored" data-anchor-id="download-and-prepare-all-the-files">Download and prepare all the files</h3>
+<p>Now we build a smart function to download the files from URL: - this function takes an argument the <code>doc_table</code> from the vector DB (<code>doc_table = db.open_table("documents")</code>). this table includes document_id, url, and evaluation_id - then for each document, and in parallelised way, it loads the url and extract the <code>file_name</code> from the <code>url</code> within the table - it builds a local <code>file_path</code> with <code>PDF_Library</code>/<code>evaluation_id</code>/<code>file_name</code> (where <code>PDF_Library</code> is an environment variable) - it checks if the ‘file_name’ is already present and then gracefully exit - if not, it downloads the file_name - this done with with some provision to avoid requesting IP being banned - and ensure some retry until the file is downloaded - if the file_name extension is not pdf, it identify the file extension then it converts it to pdf</p>
+<hr>
+<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L375" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="download_documents" class="level3">
+<h3 class="anchored" data-anchor-id="download_documents">download_documents</h3>
+<blockquote class="blockquote">
+<pre><code> download_documents (doc_table)</code></pre>
+</blockquote>
+<p>Here is the file conversion functions that assumes that <a href="https://www.libreoffice.org/download/download-libreoffice/">libre-office</a> is installed locally.</p>
+<pre class="{bash}"><code># Debian/Ubuntu
+sudo apt install libreoffice
+
+# Mac (Homebrew)
+brew install --cask libreoffice</code></pre>
+<hr>
+<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L492" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="convert_file_to_pdf" class="level3">
+<h3 class="anchored" data-anchor-id="convert_file_to_pdf">convert_file_to_pdf</h3>
+<blockquote class="blockquote">
+<pre><code> convert_file_to_pdf (input_path, output_path)</code></pre>
+</blockquote>
+<p><em>Converts Word, Excel, or PowerPoint file to PDF using LibreOffice in headless mode. Works on Windows, macOS, and Linux.</em></p>
+<hr>
+<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L456" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="find_libreoffice_exec" class="level3">
+<h3 class="anchored" data-anchor-id="find_libreoffice_exec">find_libreoffice_exec</h3>
+<blockquote class="blockquote">
+<pre><code> find_libreoffice_exec ()</code></pre>
+</blockquote>
+<p><em>Finds the appropriate LibreOffice command based on OS. Returns path to LibreOffice CLI tool or raises an error.</em></p>
+<p>Testing this…</p>
+<div id="cell-36" class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>doc_table <span class="op">=</span> db.open_table(<span class="st">"documents"</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>os.environ[<span class="st">"PDF_Library"</span>] <span class="op">=</span> <span class="st">"Evaluation_Library"</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>download_documents(doc_table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="now-load-file-content-in-the-vector-db-chunk-and-embedd" class="level3">
+<h3 class="anchored" data-anchor-id="now-load-file-content-in-the-vector-db-chunk-and-embedd">Now load file content in the vector DB, chunk and embedd</h3>
+<p>Building a function that - this function takes an argument the <code>doc_table</code> from the vector DB (<code>doc_table = db.open_table("documents")</code>). this table includes document_id, url, and evaluation_id, processed - then for each document, and in parallelised way, it loads the url and extract the <code>file_name</code> from the <code>url</code> within the table - it assume a local <code>file_path</code> with <code>PDF_Library</code>/<code>evaluation_id</code>/<code>file_name</code> (where <code>PDF_Library</code> is an environment variable - <code>file_name</code> is extracted from the url - and the <code>file_name</code> extension is sanitised to include systematically ‘.pdf’ ) - It will extract the text from the PDF using PyMuPDF with error handling – it will implement the It will then fill in the chunk table in lancedb, implementing a late chunking approach to avoid duplicate embedding computation, ensure context-aware chunk boundaries and precise span tracking . - the lancedb chunk table schema should be - chunk_id: str - document_id: str - evaluation_id: str - metadata: dict[str, str] - content: str = embedding_fn.SourceField() - vector: Vector(embedding_fn.ndims()) = embedding_fn.VectorField() - Once processed the processed variable in doc_table is set to true</p>
+<p>Test the embeddings through lanchain….</p>
+<div id="cell-38" class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>test_embedding <span class="op">=</span> embedding_model.embed_query(<span class="st">"Hello world"</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Embedding vector length: </span><span class="sc">{</span><span class="bu">len</span>(test_embedding)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>embedding_dim <span class="op">=</span> <span class="bu">len</span>(test_embedding)</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co"># LanceDB-compatible wrapper</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> LangchainEmbeddingWrapper:</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, langchain_embedder):</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>._embedder <span class="op">=</span> langchain_embedder</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, texts):</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>._embedder.embed_documents(texts)</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> ndims(<span class="va">self</span>):</span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>._dim</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Wrap and use</span></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>embedding_fn <span class="op">=</span> LangchainEmbeddingWrapper(embedding_model)</span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true" tabindex="-1"></a><span class="co">#print("Embedding dimension:", embedding_fn.ndims())</span></span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true" tabindex="-1"></a>vec <span class="op">=</span> embedding_fn([<span class="st">"Hello world"</span>])</span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Vector through lancedb dim: </span><span class="sc">{</span><span class="bu">len</span>(vec[<span class="dv">0</span>])<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(embedding_fn([<span class="st">"Hello world"</span>])[<span class="dv">0</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-39" class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">dir</span>(embedding_fn))</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="bu">help</span>(embedding_fn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>So first we create the chunk table in lancedb</p>
+<div id="cell-41" class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pydantic <span class="im">import</span> BaseModel</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> lancedb.pydantic <span class="im">import</span> Vector</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pyarrow <span class="im">as</span> pa </span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>pa_schema <span class="op">=</span> pa.schema([</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>    pa.field(<span class="st">"chunk_id"</span>, pa.string()),</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    pa.field(<span class="st">"document_id"</span>, pa.string()),</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>    pa.field(<span class="st">"evaluation_id"</span>, pa.string()),</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>    pa.field(<span class="st">"metadata"</span>, pa.string()),  <span class="co"># storing metadata dict as JSON string for simplicity</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>    pa.field(<span class="st">"content"</span>, pa.string()),</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>    pa.field(<span class="st">"vector"</span>, pa.list_(pa.float32(), embedding_dim)),  <span class="co"># vector as list of floats</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>])</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> lancedb <span class="im">import</span> <span class="ex">connect</span></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>db <span class="op">=</span> <span class="ex">connect</span>(LANCE_DB_PATH)</span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>chunk_table <span class="op">=</span> db.create_table(<span class="st">"chunks"</span>, schema<span class="op">=</span>pa_schema)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>and then the function creating embeddings chunck for each document</p>
+<hr>
+<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L586" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="process_documents_to_chunks" class="level3">
+<h3 class="anchored" data-anchor-id="process_documents_to_chunks">process_documents_to_chunks</h3>
+<blockquote class="blockquote">
+<pre><code> process_documents_to_chunks (doc_table, chunk_table)</code></pre>
+</blockquote>
+<p>Now let’s run this!</p>
+<div id="cell-45" class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>LANCE_DB_PATH <span class="op">=</span> <span class="st">"./lancedb"</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> lancedb <span class="im">import</span> <span class="ex">connect</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>db <span class="op">=</span> <span class="ex">connect</span>(LANCE_DB_PATH)</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>doc_table <span class="op">=</span> db.open_table(<span class="st">"documents"</span>)</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>chunk_table <span class="op">=</span> db.open_table(<span class="st">"chunks"</span>)</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>process_documents_to_chunks(doc_table, chunk_table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Checking the status of the chunking process</p>
+<hr>
+<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L724" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="check_chunk_status" class="level3">
+<h3 class="anchored" data-anchor-id="check_chunk_status">check_chunk_status</h3>
+<blockquote class="blockquote">
+<pre><code> check_chunk_status (doc_table, chunk_table)</code></pre>
+</blockquote>
+<div id="cell-48" class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>LANCE_DB_PATH <span class="op">=</span> <span class="st">"./lancedb"</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> lancedb <span class="im">import</span> <span class="ex">connect</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>db <span class="op">=</span> <span class="ex">connect</span>(LANCE_DB_PATH)</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>doc_table <span class="op">=</span> db.open_table(<span class="st">"documents"</span>)</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>chunk_table <span class="op">=</span> db.open_table(<span class="st">"chunks"</span>)</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>missing_docs_df <span class="op">=</span> check_chunk_status(doc_table, chunk_table)</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(missing_docs_df)</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a><span class="co"># this table includes document_id, url, and evaluation_id</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="generating-ai-enhanced-metadata" class="level3">
+<h3 class="anchored" data-anchor-id="generating-ai-enhanced-metadata">Generating AI-Enhanced metadata</h3>
+<p>Last, we run a function to generate metadata…</p>
+<p>The function will load the “evaluations” table within the db –connect(LANCE_DB_PATH) – then loop around each evaluation_id within the “chunks” table to retrive the context - and perform an LLM call to then generate as an output additional metadata Then it will update the evaluations table with the output for each evaluation - At the end it will save a json file with a dump of the evaluations table</p>
+<hr>
+<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L883" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="get_context_for_eval" class="level3">
+<h3 class="anchored" data-anchor-id="get_context_for_eval">get_context_for_eval</h3>
+<blockquote class="blockquote">
+<pre><code> get_context_for_eval (eval_row, query, chunk_table)</code></pre>
+</blockquote>
+<hr>
+<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L841" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="call_llm_with_retries" class="level3">
+<h3 class="anchored" data-anchor-id="call_llm_with_retries">call_llm_with_retries</h3>
+<blockquote class="blockquote">
+<pre><code> call_llm_with_retries (prompt, max_retries=4, delay=2)</code></pre>
+</blockquote>
+<hr>
+<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L829" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="safe_join" class="level3">
+<h3 class="anchored" data-anchor-id="safe_join">safe_join</h3>
+<blockquote class="blockquote">
+<pre><code> safe_join (items, sep=', ')</code></pre>
+</blockquote>
+<hr>
+<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L804" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="clean_json" class="level3">
+<h3 class="anchored" data-anchor-id="clean_json">clean_json</h3>
+<blockquote class="blockquote">
+<pre><code> clean_json (obj)</code></pre>
+</blockquote>
+<p><em>Recursively clean an object to make it JSON serializable, handling None values.</em></p>
+<p>We will use the <strong>PICO structured framework</strong> as an approach to represent the causal knowledge found in the Evaluation (cf.&nbsp;<a href="https://aclanthology.org/2023.findings-emnlp.774.pdf">EconBERTa: Towards Robust Extraction of Named Entities in Economics</a>). This scheme helps in systematically organizing and analyzing the effectiveness of interventions by comparing outcomes between groups:</p>
+<p><strong>1. Population (P)</strong>: The group of individuals or units (e.g., households, schools, firms) affected by the intervention. The target population shall be clearly defined (e.g., smallholder farmers, primary school students, unemployed youth) and it shall Include eligibility criteria (e.g., age, socioeconomic status, geographic location).</p>
+<p><strong>2. Intervention (I)</strong>: The program, policy, or treatment whose effect is being evaluated. Describes the active component being tested (e.g., cash transfers, training workshops, new teaching methods). Should specify dosage, duration, and delivery mechanism.</p>
+<p><strong>3. Comparators (C)</strong>: The counterfactual scenario—what would have happened without the intervention. Ideally involves a control group (if the study approach is randomized or quasi-experimental) that does not receive the intervention. Alternatively refers to “Business-as-usual” groups, placebo interventions, or different treatment arms.</p>
+<p><strong>4. Outcome (O)</strong>:The measurable effects or endpoints used to assess the intervention’s impact. Includes primary outcomes (main indicators of interest, e.g., school enrollment rates, income levels) and secondary outcomes (e.g., health, empowerment). Should be specific, measurable, and time-bound (e.g., “child literacy scores after 12 months”).</p>
+<p>Using such approach, we can ensure Clarity (the research question is well-defined and testable), Causal Inference (isolate the effect of the intervention by comparing treated and untreated groups), Replicability (to potentially extrapolate the findings) and Relevance (linking outcomes to real-world decision-making).</p>
+<hr>
+<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L913" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="generate_metadata_for_evaluation_metadata_descriptive" class="level3">
+<h3 class="anchored" data-anchor-id="generate_metadata_for_evaluation_metadata_descriptive">generate_metadata_for_evaluation_metadata_descriptive</h3>
+<blockquote class="blockquote">
+<pre><code> generate_metadata_for_evaluation_metadata_descriptive (eval_row,
+                                                        query_descriptive,
+                                                        chunk_table)</code></pre>
+</blockquote>
+<p><em>Process one evaluation row and return updated row with metadata.</em></p>
+<hr>
+<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L991" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="generate_metadata_for_evaluation_metadata_methodo" class="level3">
+<h3 class="anchored" data-anchor-id="generate_metadata_for_evaluation_metadata_methodo">generate_metadata_for_evaluation_metadata_methodo</h3>
+<blockquote class="blockquote">
+<pre><code> generate_metadata_for_evaluation_metadata_methodo (eval_row,
+                                                    query_methodo,
+                                                    chunk_table)</code></pre>
+</blockquote>
+<p><em>Process one evaluation row and return updated row with metadata.</em></p>
+<hr>
+<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L1088" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="generate_metadata_for_evaluation_metadata_evidence" class="level3">
+<h3 class="anchored" data-anchor-id="generate_metadata_for_evaluation_metadata_evidence">generate_metadata_for_evaluation_metadata_evidence</h3>
+<blockquote class="blockquote">
+<pre><code> generate_metadata_for_evaluation_metadata_evidence (eval_row, query,
+                                                     chunk_table)</code></pre>
+</blockquote>
+<p><em>Process one evaluation row and return updated row with metadata.</em></p>
+<hr>
+<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L1162" target="_blank" style="float:right; font-size:smaller">source</a></p>
+</section>
+<section id="generate_evaluation_metadata" class="level3">
+<h3 class="anchored" data-anchor-id="generate_evaluation_metadata">generate_evaluation_metadata</h3>
+<blockquote class="blockquote">
+<pre><code> generate_evaluation_metadata (eval_table, chunk_table, batch_size=10,
+                               output_file='all_evaluations_metadata.json'
+                               )</code></pre>
+</blockquote>
+<p><em>Main function to generate metadata in batches and update the table, with incremental saving.</em></p>
+<p>Now let’s run it!</p>
+<div id="cell-60" class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize DB</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>LANCE_DB_PATH <span class="op">=</span> <span class="st">"./lancedb"</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>db <span class="op">=</span> <span class="ex">connect</span>(LANCE_DB_PATH)</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>eval_table <span class="op">=</span> db.open_table(<span class="st">"evaluations"</span>)</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>chunk_table <span class="op">=</span> db.open_table(<span class="st">"chunks"</span>)</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a>enriched_data<span class="op">=</span> generate_evaluation_metadata(eval_table, chunk_table, output_file<span class="op">=</span><span class="st">"all_evaluations_metadata2.json"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="step-2-structured-information-extraction" class="level2">
+<h2 class="anchored" data-anchor-id="step-2-structured-information-extraction">Step 2: Structured Information Extraction</h2>
+<section id="standard-questions" class="level3">
+<h3 class="anchored" data-anchor-id="standard-questions">Standard Questions</h3>
+<pre class="{python}"><code># Define the list of experts on impact - outcome - organisation
+q_experts = [
+   "&lt;s&gt; [INST] Instructions: Act as a public program evaluation expert working for UNHCR. Your specific area of expertise and focus is strictly on the Strategic Impact: ---Attaining favorable protection environments---: i.e., finding or recommendations that require a change in existing policy and regulations. [/INST]",
+   "&lt;s&gt; [INST] Instructions: Act as a public program evaluation expert working for UNHCR. Your specific area of expertise and focus is strictly on the Strategic Impact: ---Realizing rights in safe environments---: i.e., finding or recommendations that require a change in existing policy and regulations. [/INST]",
+   "&lt;s&gt; [INST] Instructions: Act as a public program evaluation expert working for UNHCR. Your specific area of expertise and focus is strictly on the Strategic Impact: ---Empowering communities and achieving gender equality--- : i.e., finding or recommendations that require a change in existing policy and regulations. [/INST]",
+   "&lt;s&gt; [INST] Instructions: Act as a public program evaluation expert working for UNHCR. Your specific area of expertise and focus is strictly on the Strategic Impact: ---Securing durable solutions--- : i.e., finding or recommendations that require a change in existing policy and regulations. [/INST]",
+
+   "&lt;s&gt; [INST] Instructions: Act as a public program evaluation expert working for UNHCR. Your specific area of expertise and focus is strictly on the specific Operational Outcome: ---Access to territory registration and documentation ---, i.e. finding or recommendations that require a change that needs to be implemented in the field as an adaptation or change of current activities. [/INST]",
+   "&lt;s&gt; [INST] Instructions: Act as a public program evaluation expert working for UNHCR. Your specific area of expertise and focus is strictly on the specific Operational Outcome: --- Status determination ---, i.e. finding or recommendations that require a change that needs to be implemented in the field as an adaptation or change of current activities. [/INST]",
+   "&lt;s&gt; [INST] Instructions: Act as a public program evaluation expert working for UNHCR. Your specific area of expertise and focus is strictly on the specific Operational Outcome: --- Protection policy and law---, i.e. finding or recommendations that require a change that needs to be implemented in the field as an adaptation or change of current activities. [/INST]",
+   "&lt;s&gt; [INST] Instructions: Act as a public program evaluation expert working for UNHCR. Your specific area of expertise and focus is strictly on the specific Operational Outcome: --- Gender-based violence ---, i.e. finding or recommendations that require a change that needs to be implemented in the field as an adaptation or change of current activities. [/INST]",
+   "&lt;s&gt; [INST] Instructions: Act as a public program evaluation expert working for UNHCR. Your specific area of expertise and focus is strictly on the specific Operational Outcome: --- Child protection ---, i.e. finding or recommendations that require a change that needs to be implemented in the field as an adaptation or change of current activities. [/INST]",
+   "&lt;s&gt; [INST] Instructions: Act as a public program evaluation expert working for UNHCR. Your specific area of expertise and focus is strictly on the specific Operational Outcome: --- Safety and access to justice ---, i.e. finding or recommendations that require a change that needs to be implemented in the field as an adaptation or change of current activities. [/INST]",
+   "&lt;s&gt; [INST] Instructions: Act as a public program evaluation expert working for UNHCR. Your specific area of expertise and focus is strictly on the specific Operational Outcome: --- Community engagement and women's empowerment ---, i.e. finding or recommendations that require a change that needs to be implemented in the field as an adaptation or change of current activities. [/INST]",
+   "&lt;s&gt; [INST] Instructions: Act as a public program evaluation expert working for UNHCR. Your specific area of expertise and focus is strictly on the specific Operational Outcome: --- Well-being and basic needs ---, i.e. finding or recommendations that require a change that needs to be implemented in the field as an adaptation or change of current activities. [/INST]",
+   "&lt;s&gt; [INST] Instructions: Act as a public program evaluation expert working for UNHCR. Your specific area of expertise and focus is strictly on the specific Operational Outcome: --- Sustainable housing and settlements ---, i.e. finding or recommendations that require a change that needs to be implemented in the field as an adaptation or change of current activities. [/INST]",
+   "&lt;s&gt; [INST] Instructions: Act as a public program evaluation expert working for UNHCR. Your specific area of expertise and focus is strictly on the specific Operational Outcome: --- Healthy lives---, i.e. finding or recommendations that require a change that needs to be implemented in the field as an adaptation or change of current activities. [/INST]",
+   "&lt;s&gt; [INST] Instructions: Act as a public program evaluation expert working for UNHCR. Your specific area of expertise and focus is strictly on the specific Operational Outcome: --- Education ---, i.e. finding or recommendations that require a change that needs to be implemented in the field as an adaptation or change of current activities. [/INST]",
+   "&lt;s&gt; [INST] Instructions: Act as a public program evaluation expert working for UNHCR. Your specific area of expertise and focus is strictly on the specific Operational Outcome: --- Clean water sanitation and hygiene ---, i.e. finding or recommendations that require a change that needs to be implemented in the field as an adaptation or change of current activities. [/INST]",
+   "&lt;s&gt; [INST] Instructions: Act as a public program evaluation expert working for UNHCR. Your specific area of expertise and focus is strictly on the specific Operational Outcome: --- Self-reliance, Economic inclusion, and livelihoods ---, i.e. finding or recommendations that require a change that needs to be implemented in the field as an adaptation or change of current activities. [/INST]",
+   "&lt;s&gt; [INST] Instructions: Act as a public program evaluation expert working for UNHCR. Your specific area of expertise and focus is strictly on the specific Operational Outcome: --- Voluntary repatriation and sustainable reintegration ---, i.e. finding or recommendations that require a change that needs to be implemented in the field as an adaptation or change of current activities. [/INST]",
+   "&lt;s&gt; [INST] Instructions: Act as a public program evaluation expert working for UNHCR. Your specific area of expertise and focus is strictly on the specific Operational Outcome: --- Resettlement and complementary pathways---, i.e. finding or recommendations that require a change that needs to be implemented in the field as an adaptation or change of current activities. [/INST]",
+   "&lt;s&gt; [INST] Instructions: Act as a public program evaluation expert working for UNHCR. Your specific area of expertise and focus is strictly on the specific Operational Outcome: --- Local integration and other local solutions ---, i.e. finding or recommendations that require a change that needs to be implemented in the field as an adaptation or change of current activities. [/INST]", 
+
+
+   "&lt;s&gt; [INST] Instructions: Act as a public program evaluation expert working for UNHCR. Your specific area of expertise and focus is strictly on Organizational Enablers related to Systems and processes, i.e. elements that require potential changes in either management practices, technical approach, business processes, staffing allocation or capacity building. [/INST]",
+   "&lt;s&gt; [INST] Instructions: Act as a public program evaluation expert working for UNHCR. Your specific area of expertise and focus is strictly on Organizational Enablers related to Operational support and supply chain, i.e. elements that require potential changes in either management practices, technical approach, business processes, staffing allocation or capacity building. [/INST]" ,
+   "&lt;s&gt; [INST] Instructions: Act as a public program evaluation expert working for UNHCR. Your specific area of expertise and focus is strictly on Organizational Enablers related to People and culture, i.e. elements that require potential changes in either management practices, technical approach, business processes, staffing allocation or capacity building. [/INST]" ,
+   "&lt;s&gt; [INST] Instructions: Act as a public program evaluation expert working for UNHCR. Your specific area of expertise and focus is strictly on Organizational Enablers related to External engagement and resource mobilization, i.e. elements that require potential changes in either management practices, technical approach, business processes, staffing allocation or capacity building. [/INST]" ,
+   "&lt;s&gt; [INST] Instructions: Act as a public program evaluation expert working for UNHCR. Your specific area of expertise and focus is strictly on Organizational Enablers related to Leadership and governance, i.e. elements that require potential changes in either management practices, technical approach, business processes, staffing allocation or capacity building. [/INST]" 
+]
+
+# Predefined knowledge extraction questions
+q_questions = [
+    " List, as bullet points, all findings and evidences in relation to your specific area of expertise and focus. ",
+    " Explain, in relation to your specific area of expertise and focus, what are the root causes for the situation. " ,
+    " Explain, in relation to your specific area of expertise and focus, what are the main risks and difficulties here described. ",
+    " Explain, in relation to your specific area of expertise and focus, what what can be learnt. ",
+    " List, as bullet points, all recommendations made in relation to your specific area of expertise and focus. "#,
+    # "Indicate if mentionnend what resource will be required to implement the recommendations made in relation to your specific area of expertise and focus. ",
+    # "List, as bullet points, all recommendations made in relation to your specific area of expertise and focus that relates to topics  or activities recommended to be discontinued. ",
+    # "List, as bullet points, all recommendations made in relation to your specific area of expertise and focus that relates to topics or activities recommended to be scaled up. " 
+    # Add more questions here...
+]
+
+## Additional instructions!
+q_instr = """
+&lt;/s&gt;
+[INST]  
+Keep your answer grounded in the facts of the contexts. 
+If the contexts do not contain the facts to answer the QUESTION, return {NONE} 
+Be concise in the response and  when relevant include precise citations from the contexts. 
+[/INST] 
+"""</code></pre>
+</section>
+<section id="qa-extraction" class="level3">
+<h3 class="anchored" data-anchor-id="qa-extraction">Q&amp;A Extraction</h3>
+<pre class="{python}"><code>qa_questions = [
+    "What was the intervention type?",
+    "What outcomes were observed?",
+    "What population was targeted?",
+    "What geographic area was covered?",
+    "How strong is the evidence?",
+]
+
+def generate_qas(text):
+    prompt = f"""Extract answers to the following questions from the evaluation:
+    {json.dumps(qa_questions)}
+    
+    Text: {text[:3000]}
+    """
+    completion = client.chat.completions.create(
+        model="gpt-4",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.2
+    )
+    return completion.choices[0].message.content
+
+df_docs["qa"] = df_docs["text"].apply(generate_qas)</code></pre>
+</section>
+<section id="hybrid-search-in-lancedb" class="level3">
+<h3 class="anchored" data-anchor-id="hybrid-search-in-lancedb">Hybrid Search in LanceDB</h3>
+<pre class="{python}"><code># Sample hybrid search query
+query = "What works best to improve health outcomes for displaced persons?"
+
+query_embedding = get_text_embedding(query)
+results = table.search(query_embedding).limit(5).to_list()
+
+for result in results:
+    print(result['metadata'])
+    print(result['text'][:500])</code></pre>
+<pre class="{python}"><code>def query_evidence(question: str, table: lancedb.db.LanceTable) -&gt; Dict:
+    """Enhanced query with hybrid search and evidence grading"""
+    try:
+        # Hybrid search
+        results = hybrid_search(table, question, limit=7)
+        
+        if results.empty:
+            return {"answer": "No relevant evidence found.", "sources": []}
+        
+        context = "\n\n".join([
+            f"Document {i+1} (Relevance: {row.get('combined_score', 0):.2f}):\n{row['text']}\n"
+            for i, row in results.iterrows()
+        ])
+        
+        # Evidence-based answer generation
+        prompt = f"""
+        You are an evidence specialist answering questions about IOM programs.
+        Use ONLY the provided context from evaluation reports.
+        For each claim in your answer, cite the document number it came from.
+        
+        Question: {question}
+        
+        Context:
+        {context}
+        
+        Provide:
+        1. A direct answer to the question
+        2. Strength of evidence (High/Medium/Low)
+        3. Any limitations or caveats
+        4. List of sources with relevance scores
+        """
+        
+        response = openai.ChatCompletion.create(
+            engine=config.chat_model,
+            messages=[{"role": "user", "content": prompt}],
+            temperature=config.temperature,
+            max_tokens=config.max_tokens
+        )
+        
+        answer = response.choices[0].message.content
+        sources = [
+            {"url": url, "score": score}
+            for url, score in zip(results['url'], results.get('combined_score', 0))
+        ]
+        
+        return {
+            "question": question,
+            "answer": answer,
+            "sources": sources,
+            "search_scores": results[['_distance', '_score', 'combined_score']].to_dict()
+        }
+    
+    except Exception as e:
+        print(f"Query error: {str(e)}")
+        return {"error": str(e)}
+</code></pre>
+<pre class="{python}"><code>def extract_structured_info(table, iom_framework):
+    """Extract structured information from reports using the IOM Results Framework"""
+    # Generate questions based on the IOM framework
+    questions = generate_questions_from_framework(iom_framework)
+    
+    # Store extracted information
+    extracted_data = []
+    
+    # Process each question
+    for question in questions:
+        print(f"Processing question: {question}")
+        
+        # Search for relevant chunks
+        results = table.search(generate_embeddings([question])[0]).limit(10).to_pandas()
+        
+        # Combine relevant chunks as context
+        context = "\n\n".join(results["text"].tolist())
+        
+        # Use Azure OpenAI to extract structured answer
+        prompt = f"""
+        Based on the following evaluation report excerpts, answer the question with structured information.
+        Provide your answer in JSON format with the following structure:
+        {{
+            "question": "the question being asked",
+            "answer": "the concise answer",
+            "intervention_type": "type of intervention mentioned",
+            "population": "target population mentioned",
+            "outcome": "outcome measured",
+            "geography": "geographic location if mentioned",
+            "evidence_strength": "strength of evidence (high/medium/low)"
+        }}
+
+        Question: {question}
+        Context: {context}
+        """
+        
+        response = openai.ChatCompletion.create(
+            engine=config["azure_openai_chat_deployment"],
+            messages=[{"role": "user", "content": prompt}],
+            temperature=config["temperature"],
+            max_tokens=config["max_tokens"]
+        )
+        
+        try:
+            answer = json.loads(response.choices[0].message.content)
+            answer["source_urls"] = results["url"].unique().tolist()
+            extracted_data.append(answer)
+        except json.JSONDecodeError:
+            print(f"Failed to parse answer for question: {question}")
+    
+    return pd.DataFrame(extracted_data)
+
+def generate_questions_from_framework(framework_df):
+    """Generate questions based on the IOM Results Framework"""
+    questions = []
+    
+    # Example questions based on common evaluation themes
+    for _, row in framework_df.iterrows():
+        questions.extend([
+            f"What interventions has IOM implemented to achieve {row['Objective']}?",
+            f"What evidence exists for the effectiveness of interventions targeting {row['Outcome']}?",
+            f"What populations have been targeted by interventions aiming for {row['Indicator']}?",
+            f"What geographic areas have seen interventions related to {row['Objective']}?",
+            f"What methodologies have been used to evaluate interventions for {row['Outcome']}?"
+        ])
+    
+    # Add some general evaluation questions
+    questions.extend([
+        "What are the most effective interventions for migrant livelihood improvement?",
+        "What evidence exists for cash-based interventions in migration contexts?",
+        "What are common challenges in implementing migration programs?",
+        "What evaluation methodologies are most commonly used in IOM evaluations?",
+        "What gaps exist in the evidence base for migration interventions?"
+    ])
+    
+    return list(set(questions))  # Remove duplicates
+
+def hybrid_search(table: lancedb.db.LanceTable, query: str, limit: int = 10) -&gt; pd.DataFrame:
+    """Perform hybrid (vector + full-text) search"""
+    # Generate query embedding
+    query_embedding = generate_embeddings_batch([query])[0]
+    
+    # Perform hybrid search
+    results = table.search(query_embedding, query_string=query)\
+                 .limit(limit)\
+                 .to_pandas()
+    
+    # Score normalization (simple example)
+    if not results.empty:
+        max_vector_score = results["_distance"].max()
+        max_fts_score = results["_score"].max()
+        
+        if max_vector_score &gt; 0 and max_fts_score &gt; 0:
+            results["combined_score"] = (
+                0.7 * (results["_distance"] / max_vector_score) +
+                0.3 * (results["_score"] / max_fts_score)
+            )
+            results = results.sort_values("combined_score", ascending=False)
+    
+    return results
+
+def extract_structured_info(table: lancedb.db.LanceTable, iom_framework: pd.DataFrame) -&gt; pd.DataFrame:
+    """Enhanced information extraction with hybrid search"""
+    questions = generate_questions_from_framework(iom_framework)
+    extracted_data = []
+    
+    for question in questions:
+        try:
+            # Hybrid search for relevant chunks
+            results = hybrid_search(table, question, limit=15)
+            
+            if results.empty:
+                continue
+                
+            context = "\n\n".join(results["text"].tolist())
+            sources = results["url"].unique().tolist()
+            
+            # Structured extraction prompt
+            prompt = f"""
+            Extract structured information from this evaluation report context to answer the question.
+            Return ONLY valid JSON with this structure:
+            {{
+                "question": "the question",
+                "answer": "concise answer",
+                "intervention_type": ["type1", "type2"],
+                "population": ["group1", "group2"],
+                "outcome": ["outcome1", "outcome2"],
+                "geography": ["location1", "location2"],
+                "evidence_strength": "high/medium/low",
+                "source_urls": ["url1", "url2"]
+            }}
+            
+            Question: {question}
+            Context: {context}
+            """
+            
+            response = openai.ChatCompletion.create(
+                engine=config.chat_model,
+                messages=[{"role": "user", "content": prompt}],
+                temperature=config.temperature,
+                max_tokens=config.max_tokens,
+                response_format={ "type": "json_object" }
+            )
+            
+            answer = json.loads(response.choices[0].message.content)
+            answer["source_urls"] = sources
+            extracted_data.append(answer)
+            
+        except Exception as e:
+            print(f"Error processing question '{question}': {str(e)}")
+            continue
+    
+    return pd.DataFrame(extracted_data)
+</code></pre>
+</section>
+</section>
+<section id="step-3-cross-evaluation-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="step-3-cross-evaluation-analysis">Step 3: Cross-Evaluation Analysis</h2>
+</section>
+<section id="step-4-generate-actionable-and-generalizable-insights" class="level2">
+<h2 class="anchored" data-anchor-id="step-4-generate-actionable-and-generalizable-insights">Step 4: Generate Actionable and Generalizable Insights</h2>
+<p>One key challenge is How to generalize the findings from an evaluation from one place to another one? The <a href="https://ssir.org/articles/entry/the_generalizability_puzzle">Generalizability Framework</a> provides some insights on how to do that.</p>
+<p>To implement this we will generate insights using AI-enabled Q&amp;A on all previous Q&amp;A:</p>
+<pre class="{python}"><code>def generate_insights(df):
+    # Add your insight generation logic here
+    return df
+
+df = generate_insights(df)</code></pre>
+</section>
+<section id="step-5-identify-patterns-and-gaps" class="level2">
+<h2 class="anchored" data-anchor-id="step-5-identify-patterns-and-gaps">Step 5: Identify Patterns and Gaps</h2>
+<p>Identify patterns and gaps in the data:</p>
+<pre class="{python}"><code>def identify_patterns(df):
+    # Add your pattern identification logic here
+    return df
+
+df = identify_patterns(df)</code></pre>
+<pre class="{python}"><code>def generate_deliverables(df):
+    # Generate Q&amp;A dataset
+    qa_dataset = df[['question', 'answer']]
+
+    # Generate synthesis report
+    synthesis_report = df.describe()
+
+    # Generate visual evidence map
+    plt.figure(figsize=(10, 6))
+    sns.scatterplot(data=df, x='outcome', y='population', size='sample_size')
+    plt.title('Visual Evidence Map')
+    plt.show()
+
+    return qa_dataset, synthesis_report
+
+qa_dataset, synthesis_report = generate_deliverables(df)</code></pre>
+<p>Visualize Patterns &amp; Gaps</p>
+<pre class="{python}"><code># Convert QA to structured fields (intervention, outcome, population, etc.)
+qa_df = pd.json_normalize(df_docs["qa"].apply(json.loads))
+
+# Bubble Map Example
+fig = px.scatter(qa_df, x="geography", y="outcome",
+                 size="sample_size", color="intervention",
+                 hover_name="file_name",
+                 title="Evidence Bubble Map")
+fig.show()
+
+# Heatmap Example
+heatmap_df = pd.crosstab(qa_df["intervention"], qa_df["outcome"])
+sns.heatmap(heatmap_df, annot=True, cmap="coolwarm")</code></pre>
+<pre class="{python}"><code>def create_interactive_visualizations(extracted_data: pd.DataFrame):
+    """Enhanced visualization functions"""
+    # Prepare data
+    df = extracted_data.explode("source_urls")
+    
+    # Evidence Strength Distribution
+    strength_dist = df['evidence_strength'].value_counts().reset_index()
+    fig1 = px.bar(
+        strength_dist,
+        x='evidence_strength',
+        y='count',
+        title='Distribution of Evidence Strength'
+    )
+    
+    # Interventions by Geography
+    fig2 = px.treemap(
+        df,
+        path=['geography', 'intervention_type'],
+        title='Interventions by Geographic Region'
+    )
+    
+    # Evidence Timeline (if dates available)
+    if 'date' in df.columns:
+        fig3 = px.line(
+            df.groupby('date').size().reset_index(name='count'),
+            x='date',
+            y='count',
+            title='Evidence Publication Timeline'
+        )
+    else:
+        fig3 = None
+    
+    return fig1, fig2, fig3
+</code></pre>
+<pre class="{python}"><code>def visualize_evidence_map(extracted_data):
+    """Create interactive visualizations of the evidence map"""
+    
+    # Prepare data for visualization
+    df = extracted_data.explode("source_urls")
+    
+    # Bubble map: Interventions by outcome and evidence strength
+    fig1 = px.scatter(
+        df, 
+        x="outcome", 
+        y="intervention_type", 
+        size="evidence_strength",  # This would need to be mapped to numeric values
+        color="population",
+        hover_name="answer",
+        title="Evidence Map: Interventions by Outcome and Population"
+    )
+    fig1.update_layout(height=800)
+    
+    # Heatmap: Evidence concentration by intervention and outcome
+    heatmap_data = df.groupby(['intervention_type', 'outcome']).size().unstack().fillna(0)
+    fig2 = px.imshow(
+        heatmap_data,
+        labels=dict(x="Outcome", y="Intervention Type", color="Number of Studies"),
+        title="Evidence Concentration Heatmap"
+    )
+    
+    # Gap map: Missing evidence
+    all_interventions = df['intervention_type'].unique()
+    all_outcomes = df['outcome'].unique()
+    complete_grid = pd.MultiIndex.from_product([all_interventions, all_outcomes], names=['intervention_type', 'outcome'])
+    gap_data = df.groupby(['intervention_type', 'outcome']).size().reindex(complete_grid, fill_value=0).reset_index()
+    gap_data['has_evidence'] = gap_data[0] &gt; 0
+    
+    fig3 = px.scatter(
+        gap_data,
+        x="outcome",
+        y="intervention_type",
+        color="has_evidence",
+        title="Evidence Gap Map (Red = Missing Evidence)"
+    )
+    
+    return fig1, fig2, fig3
+
+def generate_synthesis_report(extracted_data):
+    """Generate a narrative synthesis report of findings"""
+    prompt = f"""
+    You are an evaluation specialist analyzing evidence from IOM evaluation reports.
+    Below is structured data extracted from multiple evaluation reports:
+    
+    {extracted_data.to_json()}
+    
+    Write a comprehensive synthesis report that:
+    1. Summarizes key findings across interventions
+    2. Identifies areas with strong evidence
+    3. Highlights evidence gaps
+    4. Provides recommendations for future evaluations
+    5. Suggests high-priority research areas
+    
+    Structure your report with clear sections and bullet points for readability.
+    """
+    
+    response = openai.ChatCompletion.create(
+        engine=config["azure_openai_chat_deployment"],
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.5,  # Slightly more creative for synthesis
+        max_tokens=3000
+    )
+    
+    return response.choices[0].message.content
+</code></pre>
+<p>Save the deliverables to files:</p>
+<pre class="{python}"><code>qa_dataset.to_csv('qa_dataset.csv', index=False)
+synthesis_report.to_csv('synthesis_report.csv')</code></pre>
+</section>
+<section id="conclusions---and-potential-extension" class="level2">
+<h2 class="anchored" data-anchor-id="conclusions---and-potential-extension">Conclusions - and potential extension…</h2>
+<ul>
+<li><p>Web interface (Streamlit, Gradio, etc.)</p></li>
+<li><p>Periodic syncing with new evaluations via web scraping</p></li>
+<li><p>Integration with Hugging Face for fine-tuning a summarization or Q&amp;A model</p></li>
+</ul>
 
 
 </section>

@@ -1,100 +1,102 @@
----
-title: "Building an Evaluation Knowledge database and Evidence Maps"
-subtitle: Technical Approach Paper 
-date: today
-author: Edouard Legoupil, Chief Data Officer, IOM
-format: quarto_iom_article-html
-project:
-  type: website
-jupyter: python3
-execute:
-  engine: jupyter
-  eval: true
-toc: true
----
-
-## Evaluation, Evidence & Knowledge
-
- An **Evaluation Evidence Map** is a structured, visual tool that organizes what we know—and don’t know—about programs, policies, and interventions. Think of it as a research landscape that helps decision-makers quickly understand:
-
-- Which interventions have been evaluated  
-- Where they were implemented  
-- What outcomes were observed  
-- Where critical knowledge gaps remain  
-
-This approach is especially valuable for evidence-informed project design, particularly when time or resources limit the ability to read through hundreds of individual evaluation reports (see [UNICEF Evidence Map example](https://evaluationreports.unicef.org/app/evaluation-evidence-gap-map.html)).
-
-The goal of this exercise is to inform future evaluation design, guide strategic planning, and support the development of robust, evidence-based project proposals and strategic plan.
-
-
-## Introduction
-
-This notebook implements an evidence mapping system with:
- - Batch processing for scalability
- - Robust error handling and retries
- - Embedding caching
- - Hybrid search (vector + full-text)
- - Local LanceDB deployment
-
-we can follow these steps:
-
- - Load the JSON file containing the URLs of the PDF reports.
- - Load the Excel file describing the IOM Results Framework.
- - Download and process the PDF reports to extract text.
- - Integrate the extracted text with the IOM Results Framework.
- - Generate embeddings and store them in LanceDB. 
-
-
-------------------------------------------------------------------------
-
-## Step 0: Environment Set up
-
-The body of this document targets a technical audience. Below are all the codes so that the whole process can be reproduced and audited. This assume to use the following code within [Visual Studio Code](https://code.visualstudio.com/).
-
-### Virtual Environment
-First we need to use a virtual environment in Python development. This is essential for managing dependencies, avoiding conflicts, and ensuring reproducibility. It allows you to isolate project-specific libraries and versions, preventing interference with other projects or the global Python installation. This isolation helps maintain a clean development environment, simplifies project setup for collaborators, and enhances security by reducing the risk of introducing vulnerabilities. Overall, virtual environments provide a consistent and organized way to manage your Python projects effectively.
-
-Make sure to install the last [stable version of python language](https://www.python.org/downloads/) and create a dedicated python environment to have a fresh install where to manage correctly all the dependencies between packages. To specify a particular version of Python when creating a virtual environment, you can use the full path to the desired Python executable. Here is how you can do it:
-
-Open your terminal (Command Prompt, PowerShell, or any terminal emulator).
-
-Navigate to your project directory where you want to create the virtual environment.
-
-Run the following command to create a virtual environment,here called **`.venv`**:
-
-```{bash}
-#| eval: false 
-python -m venv .venv
-```
-
-Then, activate the virtual environment:
-```{bash} 
-#| eval: false
-.\.venv\Scripts\activate
-```
-
-
-Then, configure visual Studio Code to use the virtual environment: Open the Command Palette using the shortcut `Ctrl+Shift+P` and type `Jupyter: Select Interpreter` and select the interpreter that corresponds to your newly created virtual environment: `('venv': venv)`.
-
-
-### Required Python Modules
-
-Once this environment selected as a kernel to run the notebook, we can install the required python modules the rest of the process:
-
-```{python} 
+# type: ignore
+# flake8: noqa
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
 %pip install openai  lancedb pyarrow pandas numpy matplotlib seaborn plotly pymupdf requests tqdm tenacity ipython dotenv langchain langchain-community langchain_openai  ipywidgets openpyxl  filetype
-```
-
-
-then Restart the jupyter kernel for this notebook
-```{python}
+#
+#
+#
+#
+#
 #| eval: false
 %reset -f
-```
-
-### Initialise LLM API
-
-```{python} 
+#
+#
+#
+#
+#
 import os
 from dotenv import load_dotenv
 # Load environment variables
@@ -121,14 +123,14 @@ llm_accurate = AzureChatOpenAI(
 )
 
 
-```
-
-
-### Load PDF library and Strategic Results Framework
-
-The library
-
-```{python} 
+#
+#
+#
+#
+#
+#
+#
+#
 import pandas as pd
 import openpyxl
 import json
@@ -195,16 +197,16 @@ def load_evaluations(file_path,json_path):
 
     
     return evaluations
-```
-
-```{python} 
+#
+#
+#
 library =load_evaluations("reference/Evaluation_repository.xlsx","reference/Evaluation_repository.json" )
-```
-
-
-Now the framework
-
-```{python} 
+#
+#
+#
+#
+#
+#
 import pandas as pd
 import openpyxl
 def load_iom_framework(excel_path: str) -> pd.DataFrame:
@@ -217,200 +219,200 @@ def load_iom_framework(excel_path: str) -> pd.DataFrame:
         assert col in df.columns, f"Framework missing required column: {col}"
     
     return df
-```
-
-```{python}
+#
+#
+#
 framework= load_iom_framework("reference/Strategic_Result_Framework.xlsx")    
-```
-
-## Step 1: Building the Knowledge Base
-
-So we have a collection of Evaluation documents. We have metadata for each Evaluation. For each evaluation, we have multiple documents (The evaluation report itslef, plus in some case: a summary brief, annexes, etc.)
-
-See an example below
-```{json} 
-[
-    {
-        "Title": "Finale Internal Evluation: ENHANCING THE CAPACITY TO MAINSTREAM ENVIRONMENT AND CLIMATE CHANGE WITHIN WIDER FRAMEWORK OF MIGRATION MANAGEMENT IN WEST AND CENTRAL AFRICA",
-        "Year": "2022",
-        "Author": "Abderrahim El Moulat",
-        "Best Practices or Lessons Learnt": "Yes",
-        "Date of Publication": "2022-06-22 00:00:00",
-        "Donor": "IOM Development Fund",
-        "Evaluation Brief": "Yes",
-        "Evaluation Commissioner": "Donor, IOM",
-        "Evaluation Coverage": "Country",
-        "Evaluation Period From Date": "nan",
-        "Evaluation Period To Date": "NaT",
-        "Executive Summary": "Yes",
-        "External Version of the Report": "No",
-        "Languages": "English",
-        "Migration Thematic Areas": "Migration and climate change",
-        "Name of Project(s) Being Evaluated": NaN,
-        "Number of Pages Excluding annexes": 20.0,
-        "Other Documents Included": NaN,
-        "Project Code": "NC.0030",
-        "Countries Covered": [
-            "Senegal"
-        ],
-        "Regions Covered": "RO Dakar",
-        "Relevant Crosscutting Themes": "Gender",
-        "Report Published": "Yes",
-        "Terms of Reference": "No",
-        "Type of Evaluation Scope": "Programme/Project",
-        "Type of Evaluation Timing": "Ex-post (after the end of the project/programme)",
-        "Type of Evaluator": "Internal",
-        "Level of Evaluation": "Decentralized",
-        "Documents": [
-            {
-                "Document Subtype": "Evaluation brief",
-                "File URL": "https://evaluation.iom.int/sites/g/files/tmzbdl151/files/docs/resources/Internal%20Evaluation_NC0030_JUNE_2022_FINAL_Abderrahim%20EL%20MOULAT_0.pdf",
-                "File description": "Evaluation Brief"
-            },
-            {
-                "Document Subtype": "Evaluation report",
-                "File URL": "https://evaluation.iom.int/sites/g/files/tmzbdl151/files/docs/resources/NC0030_Evaluation%20Brief_June%202022_Abderrahim%20EL%20MOULAT.pdf",
-                "File description": "Evaluation Report"
-            }
-        ]
-    },
-    {
-        "Title": "Local Authorities Network for Migration and Development",
-        "Year": "2022",
-        "Author": "Action Research for CO-development (ARCO)",
-        "Best Practices or Lessons Learnt": "No",
-        "Date of Publication": "2022-02-01 00:00:00",
-        "Donor": "Government of Italy",
-        "Evaluation Brief": "No",
-        "Evaluation Commissioner": "IOM",
-        "Evaluation Coverage": "Multi-country",
-        "Evaluation Period From Date": "2020-07-06 00:00:00",
-        "Evaluation Period To Date": "2021-07-31 00:00:00",
-        "Executive Summary": "Yes",
-        "External Version of the Report": "No",
-        "Languages": "English",
-        "Migration Thematic Areas": "Migration and Development - diaspora",
-        "Name of Project(s) Being Evaluated": NaN,
-        "Number of Pages Excluding annexes": 37.0,
-        "Other Documents Included": NaN,
-        "Project Code": "MD.0003",
-        "Countries Covered": [
-            "Albania",
-            "Italy"
-        ],
-        "Regions Covered": "RO Brussels",
-        "Relevant Crosscutting Themes": "Gender, Rights-based approach",
-        "Report Published": "No",
-        "Terms of Reference": "Yes",
-        "Type of Evaluation Scope": "Programme/Project",
-        "Type of Evaluation Timing": "Final (at the end of the project/programme)",
-        "Type of Evaluator": "External",
-        "Level of Evaluation": "Decentralized",
-        "Documents": [
-            {
-                "Document Subtype": "Evaluation report",
-                "File URL": "https://evaluation.iom.int/sites/g/files/tmzbdl151/files/docs/resources/Evaluation%20Brief_ARCO_Shiraz%20JERBI.pdF",
-                "File description": "Evaluation Report "
-            },
-            {
-                "Document Subtype": "Evaluation brief",
-                "File URL": "https://evaluation.iom.int/sites/g/files/tmzbdl151/files/docs/resources/Final%20evaluation%20report_ARCO_Shiraz%20JERBI_1.pdf",
-                "File description": "Evaluation Brief"
-            },
-            {
-                "Document Subtype": "Management response",
-                "File URL": "https://evaluation.iom.int/sites/g/files/tmzbdl151/files/docs/resources/Management%20Response%20Matrix_ARCO_Shiraz%20JERBI.pdf",
-                "File description": "Management Response"
-            }
-        ]
-    }
-]
-```
-
-
-Workflow Overview
-
-1. Load external metadata for one evaluations as per json file.
-2. Then for each evaluation, download the file, convert it to PDF (in case it's a word, excel or ppt), and load text for each document.
-3. Then implement a [late chunking that can solve the lost context problem](https://isaacflath.com/blog/blog_post?fpath=posts%2F2025-04-08-LateChunking.ipynb) and  insert in chunk table, enabling [Hybrid Search capability](https://docs.lancedb.com/core/hybrid-search) so that search can be made based on both key words and similirarity.
-4. Create additional metadata for both documents and for evaluation using an LLM call. the additional metadata shall help to define an asesssment of the "evidence strenght". The metadata to be created are - evaluation type (formative, summative, impact), Methodology, study design, sample size, and data collection techniques  
-
-
-
-### Initialize LanceDB Vector Database
-
-The database includes 23 tables: 
-
-__1. Evaluations Table__
-Each row represents a unique evaluation with the following fields:
-
-* evaluation_id (unique identifier)
-* title 
-* author
-* practice_or_lessons
-* donor
-* is_brief
-* commissioner
-* coverage
-* countries
-* from_date
-* to_date
-* has_summary
-* external_version
-* language
-* thematic_area
-* name_project
-* project_code
-* evaluation_scope
-* evaluation_timing
-* evaluation_level
-* evaluator_type
-* theme
-* cross_cutting
-
-additional variable will be generated through an LLM prompt on the entire evaluation content
-
-* short_title 
-* summary
-* population (PICO model)
-* intervention (PICO model)
-* comparator (PICO model)
-* outcome (PICO model)
-* methodology
-* study_type
-* study_design
-* sample_size
-* data_collection_techniques
-* evidence_strength 
-* limitations 
-
-
-__2. Documents Table__
-
-Each row represents a PDF file linked to an evaluation:
- 
-* document_id: Primary key   ID of the original PDF
-* evaluation_id: foreign key to link to the evaluation
-* document_subtype: from the original metadata
-* document_url: from the original metadata
-* document_name: from the original metadata 
-* document_tite:  document type as reviewed by the LLM
-* document_type_infer: document type as reviewed by the LLM
-* document_processed: boolean to confirm it is done
-
-
-__3. Chunk Table__
-* chunk_id: Primary key  
-* evaluation_id: foreign key to link to the evaluation
-* document_id: ID of the original file
-* document_page: for proper referencing of any further information retrieval
-* chunk_index: order of the chunk in the document
-* text: the chunked content
-* embedding (for hybrid search)
-
-Let's start by loading the library from json...
-
-```{python}
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
 from typing import List, Dict, Optional # Type hinting
 import json
 def load_evaluations(json_path: str) -> List[Dict]:
@@ -440,34 +442,33 @@ def load_evaluations(json_path: str) -> List[Dict]:
     except Exception as e:
         print(f"Error loading evaluation data: {e}")
         return []
-```
-
-Load a small subset for testing..
-
-```{python}    
+#
+#
+#
+#
+#
 # Load your   metadata
-#evaluation_data =  load_evaluations("reference/Evaluation_repository_test.json")
-evaluation_data =  load_evaluations("reference/Evaluation_repository.json")
+evaluation_data =  load_evaluations("reference/Evaluation_repository_test.json")
 print(f"Attribute name is: {evaluation_data}")
 print(type(evaluation_data))
-```
-
-Id Generation
-
-```{python}
+#
+#
+#
+#
+#
 import hashlib
 def generate_id(text: str) -> str:
     """Generate a deterministic ID from text"""
     return hashlib.md5(text.encode()).hexdigest()
-```
-
-```{python}
+#
+#
+#
 eval_id = generate_id( "aaa")
 print({eval_id})
-```
-
-
-```{python}
+#
+#
+#
+#
 import time
 import shutil
 def force_delete_directory(path, max_retries=3, delay=1):
@@ -485,11 +486,11 @@ def force_delete_directory(path, max_retries=3, delay=1):
     return False
 
 force_delete_directory(LANCE_DB_PATH)
-```
-
-We start prefilling our vector database with the metadata
-
-```{python}
+#
+#
+#
+#
+#
 from lancedb import connect
 import numpy as np
 
@@ -519,7 +520,7 @@ def initialise_knowledge_base(db, evaluation: Dict):
         pa.field("type_of_evaluation_timing", pa.string()),
         pa.field("type_of_evaluator", pa.string()),
         pa.field("level_of_evaluation", pa.string()),
-        pa.field("scope", pa.string()),
+        pa.field("scope", pa.list_(pa.string())),
         pa.field("geography", pa.list_(pa.string())),
         pa.field("summary", pa.string()),
         pa.field("evaluation_type", pa.string()),
@@ -631,25 +632,25 @@ def initialise_knowledge_base(db, evaluation: Dict):
             raise
 
     return eval_id
-```
-
-```{python}
+#
+#
+#
 LANCE_DB_PATH = "./lancedb"
 db = connect(LANCE_DB_PATH)
 for evaluation in evaluation_data:  # Assuming evaluation_data is a list
     initialise_knowledge_base(db, evaluation)
-```
-
-Let's check each evaluation is in the DB -
-```{python}
+#
+#
+#
+#
 eval_table = db.open_table("evaluations")
 #  Convert to Pandas DataFrame (recommended for display)
 df = eval_table.to_pandas()
 print(df)
-```
-
-and the corresponding documents...
-```{python}
+#
+#
+#
+#
 LANCE_DB_PATH = "./lancedb"
 from lancedb import connect
 db = connect(LANCE_DB_PATH)
@@ -658,19 +659,19 @@ doc_table = db.open_table("documents")
 df = doc_table.to_pandas()
 print(df)
 # this table includes document_id, url, and evaluation_id
-```
-
-### Download and prepare all the files
-
-Now we build a smart function to download the files from  URL:
- - this function takes an argument the `doc_table` from the vector DB (`doc_table = db.open_table("documents")`). this table includes document_id, url, and evaluation_id
- - then for each document, and in parallelised way, it loads the url and extract the `file_name` from the `url` within the table
- - it builds a local `file_path` with `PDF_Library`/`evaluation_id`/`file_name` (where `PDF_Library` is an environment variable) 
- - it checks if the 'file_name' is already present and then gracefully exit
- - if not, it downloads the file_name - this done with with some provision to avoid requesting IP being banned - and ensure some retry until the file is downloaded
- - if the file_name extension is not pdf, it identify the file extension then it converts it to pdf
-
-```{python}
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
 import os
 import time
 import random
@@ -766,19 +767,19 @@ def download_documents(doc_table):
 
     for r in results:
         print(r)
-```
-
-Here is the file conversion functions that assumes that [libre-office](https://www.libreoffice.org/download/download-libreoffice/) is installed locally.
-
-```{bash}
-# Debian/Ubuntu
-sudo apt install libreoffice
-
-# Mac (Homebrew)
-brew install --cask libreoffice
-```
-
-```{python}
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
 import subprocess
 import platform
 from pathlib import Path
@@ -859,36 +860,36 @@ def convert_file_to_pdf(input_path, output_path):
         raise RuntimeError(f"LibreOffice failed: {e.stderr.decode().strip()}")
     except Exception as e:
         raise RuntimeError(f"Conversion error: {e}")
-```
-
-Testing this...
-
-```{python}
+#
+#
+#
+#
+#
 doc_table = db.open_table("documents")
 os.environ["PDF_Library"] = "Evaluation_Library"
 download_documents(doc_table)
-```
-
-### Now load file content in the vector DB, chunk and embedd
-
-Building a function that 
- - this function takes an argument the `doc_table` from the vector DB (`doc_table = db.open_table("documents")`). this table includes document_id, url, and evaluation_id, processed
- - then for each document, and in parallelised way, it loads the url and extract the `file_name` from the `url` within the table
- - it assume a local `file_path` with `PDF_Library`/`evaluation_id`/`file_name` (where `PDF_Library` is an environment variable - `file_name` is extracted from the url - and the `file_name` extension is sanitised to include systematically '.pdf' ) 
- - It will extract the text from the PDF using PyMuPDF with error handling
--- it will implement the  It will then fill in the chunk table in lancedb, implementing a late chunking approach to avoid duplicate embedding computation, ensure context-aware chunk boundaries and precise span tracking .
-- the lancedb chunk table schema should be 
-    - chunk_id: str
-    - document_id: str
-    - evaluation_id: str
-    - metadata: dict[str, str] 
-    - content: str = embedding_fn.SourceField()
-    - vector: Vector(embedding_fn.ndims()) = embedding_fn.VectorField() 
-- Once processed the  processed variable in doc_table is set to true   
-
-
-Test the embeddings through lanchain....
-```{python}
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
 # Initialize embeddings
 import os
 from dotenv import load_dotenv 
@@ -904,7 +905,7 @@ embedding_model = AzureOpenAIEmbeddings(
 
 test_embedding = embedding_model.embed_query("Hello world")
 print(f"Embedding vector length: {len(test_embedding)}")
-embedding_dim = len(test_embedding)
+
 # LanceDB-compatible wrapper
 class LangchainEmbeddingWrapper:
     def __init__(self, langchain_embedder):
@@ -924,18 +925,18 @@ vec = embedding_fn(["Hello world"])
 print(f"Vector through lancedb dim: {len(vec[0])}")
 print(embedding_fn(["Hello world"])[0])
 
-```
-
-```{python}
+#
+#
+#
 print(dir(embedding_fn))
 help(embedding_fn)
-```
-
-So first we create the chunk table in lancedb 
-```{python}
+#
+#
+#
+#
 from pydantic import BaseModel
 from lancedb.pydantic import Vector
-import pyarrow as pa 
+import pyarrow as pa
 pa_schema = pa.schema([
     pa.field("chunk_id", pa.string()),
     pa.field("document_id", pa.string()),
@@ -949,111 +950,92 @@ from lancedb import connect
 db = connect(LANCE_DB_PATH)
 chunk_table = db.create_table("chunks", schema=pa_schema)
 
-```
-
-and then the function creating embeddings chunck for each document
-
-
-```{python}
+#
+#
+#
+#
+#
 import os
 import fitz  # PyMuPDF
 import uuid
 import time
+import hashlib
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
 from lancedb.pydantic import Vector
 import pandas as pd
-from typing import Dict, List, Any
+from typing import Dict
 import json
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-import logging
 
-# --- Configuration ---
-CHUNK_SIZE = 1000
-CHUNK_OVERLAP = 200
+CHUNK_SIZE = 1000  # characters
+CHUNK_OVERLAP = 200  # characters
 MAX_RETRIES = 5
 RETRY_BACKOFF = 2  # seconds base (exponential)
 os.environ["PDF_Library"] = "Evaluation_Library"
-LOG_FILE = "chunck_processing.log"
-
-# --- Setup Logging ---
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s",
-    handlers=[
-        logging.FileHandler(LOG_FILE),
-        logging.StreamHandler()
-    ]
-)
 
 def process_documents_to_chunks(doc_table, chunk_table):
     PDF_LIBRARY = os.environ["PDF_Library"]
-    
-    # --- Helper: Extract text from PDF ---
-    def extract_text_from_pdf(pdf_path: Path) -> str:
+
+    def extract_text_from_pdf(pdf_path):
         try:
             doc = fitz.open(pdf_path)
             text = "\n".join(page.get_text() for page in doc)
             doc.close()
             return text.strip()
         except Exception as e:
-            logging.error(f"Failed to extract text from {pdf_path}: {e}")
+            print(f"[✗] Failed to extract text from {pdf_path}: {e}")
             return None
 
-    # --- Helper: Sanitize file name ---
-    def sanitize_filename_from_url(url: str) -> str:
+    def sanitize_filename_from_url(url):
         file_name = Path(url.split("?")[0]).name
         return Path(file_name).stem + ".pdf"
 
-    # --- Helper: Split text into chunks ---
-    def chunk_text(text: str) -> List[str]:
+    def chunk_text(text: str):
         splitter = RecursiveCharacterTextSplitter(
-            chunk_size=CHUNK_SIZE,
+            chunk_size=CHUNK_SIZE, 
             chunk_overlap=CHUNK_OVERLAP,
             separators=["\n\n", "\n", ". ", "! ", "? ", " ", ""],
             length_function=len,
             keep_separator=True,
-            is_separator_regex=False,
-        )
+            is_separator_regex=False)
         return splitter.split_text(text)
 
-
-    embedding_dim = "5000"
-
-    # --- Helper: Embed with retry ---
-    def embed_with_retry(text: str) -> List[float]:
+    from lancedb.embeddings import get_registry
+ 
+   # embedding_fn = get_registry().get("openai")()
+    #embedding_dim = embedding_fn.ndims()
+    embedding_dim = ""
+    def embed_with_retry(text):
         for attempt in range(1, MAX_RETRIES + 1):
             try:
+                # LanceDB embedding functions expect a list of texts
+               # return embedding_fn.compute_query_embeddings([text])[0]
                 return embedding_fn([text])[0]
             except Exception as e:
                 wait_time = RETRY_BACKOFF ** attempt
-                logging.warning(f"Embedding failed (attempt {attempt}): {e}")
+                print(f"[!] Embedding failed (attempt {attempt}): {e}")
                 if attempt == MAX_RETRIES:
                     raise
                 time.sleep(wait_time)
 
-    # --- Threaded processing function ---
-    def process_doc(doc: Dict[str, Any]) -> Dict[str, Any]:
-        document_id = doc["document_id"]
+    def process_doc(doc: Dict) -> str:
         if doc.get("processed", False):
-            logging.info(f"Already processed: {document_id}")
-            return {"document_id": document_id, "status": "already_processed", "chunks": 0}
+            return f"[✓] Already processed: {doc['document_id']}"
 
         url = doc["url"]
+        print(f"Now processing: {url} \n")
         evaluation_id = doc["evaluation_id"]
+        document_id = doc["document_id"]
         file_name = sanitize_filename_from_url(url)
         file_path = Path(PDF_LIBRARY) / evaluation_id / file_name
 
-        logging.info(f"Processing: {document_id} ({file_path})")
-
         if not file_path.exists():
-            logging.warning(f"Missing file: {file_path}")
-            return {"document_id": document_id, "status": "missing_file", "chunks": 0}
+            return f"[✗] Missing file: {file_path}"
 
         text = extract_text_from_pdf(file_path)
         if not text:
-            logging.warning(f"No text extracted from: {file_path}")
-            return {"document_id": document_id, "status": "no_text_extracted", "chunks": 0}
+            return f"[✗] No text extracted: {file_path}"
 
         chunks = chunk_text(text)
         chunk_records = []
@@ -1068,135 +1050,70 @@ def process_documents_to_chunks(doc_table, chunk_table):
                     "evaluation_id": evaluation_id,
                     "metadata": json.dumps({"chunk_index": str(i)}),
                     "content": chunk,
-                    "vector": vector,
+                    "vector": vector
                 })
             except Exception as e:
-                logging.error(f"Failed to embed chunk {i} of {document_id}: {e}")
+                print(f"[✗] Failed to embed chunk {i} of {document_id}: {e}")
                 continue
 
         if chunk_records:
             chunk_table.add(pd.DataFrame(chunk_records))
-            return {"document_id": document_id, "status": "processed", "chunks": len(chunk_records)}
+            #doc_table.update({"document_id": document_id}, {"processed": True})
+            doc_table.update(
+                where=f"document_id = '{document_id}'",
+                values={"processed": True}
+            )
+            return f"[→] Processed {document_id} with {len(chunk_records)} chunks"
         else:
-            logging.warning(f"No chunks processed for {document_id}")
-            return {"document_id": document_id, "status": "no_chunks_processed", "chunks": 0}
+            return f"[✗] No chunks processed for {document_id}"
 
-    # Load documents
     documents = doc_table.to_pandas().to_dict(orient="records")
 
-    # Threaded processing
     with ThreadPoolExecutor(max_workers=8) as executor:
         results = list(executor.map(process_doc, documents))
 
-    # Sequential update to avoid LanceDB conflicts
-    for result in results:
-        if result["status"] == "processed":
-            document_id = result["document_id"]
-            success = False
-            for attempt in range(1, MAX_RETRIES + 1):
-                try:
-                    doc_table.update(
-                        where=f"document_id = '{document_id}'",
-                        values={"processed": True}
-                    )
-                    success = True
-                    break
-                except RuntimeError as e:
-                    if "Retryable commit conflict" in str(e):
-                        logging.warning(f"Update conflict for {document_id}, retrying...")
-                        time.sleep(RETRY_BACKOFF ** attempt)
-                    else:
-                        logging.error(f"Failed to update {document_id}: {e}")
-                        break
-            if not success:
-                logging.error(f"Gave up updating {document_id} after retries")
-
-    # Create full-text search index
+    ## Now building a text index for hybrid search
+    import tantivy
+    import lance
     chunk_table.create_fts_index("content")
-    logging.info("FTS index created on 'content'")
+    print("[✓] FTS index created on 'content'")
 
-    # Final report
     for result in results:
-        logging.info(f"{result['status']}: {result['document_id']} ({result['chunks']} chunks)")
-```
+        print(result)
 
-Now let's run this! 
-
-```{python}
+#
+#
+#
+#
+#
+#
 LANCE_DB_PATH = "./lancedb"
 from lancedb import connect
 db = connect(LANCE_DB_PATH)
 doc_table = db.open_table("documents")
 chunk_table = db.open_table("chunks")
 process_documents_to_chunks(doc_table, chunk_table)
-```
-
-Checking the status of the chunking process
-
-```{python}
-def check_chunk_status(doc_table, chunk_table):
-    import pandas as pd
-
-    # Load documents and chunks as DataFrames
-    docs_df = doc_table.to_pandas()
-    chunks_df = chunk_table.to_pandas()
-
-    # Count chunks per document_id
-    chunk_counts = chunks_df.groupby("document_id").size().reset_index(name="chunk_count")
-
-    # Merge chunk counts into docs_df (left join)
-    merged = docs_df.merge(chunk_counts, on="document_id", how="left")
-
-    # Fill NaN chunk counts with 0 (documents with no chunks)
-    merged["chunk_count"] = merged["chunk_count"].fillna(0).astype(int)
-
-    # Define which docs are missing chunks or have zero chunks
-    missing_chunks_df = merged[merged["chunk_count"] == 0]
-
-    # Summary counts
-    total_docs = len(docs_df)
-    properly_chunked = total_docs - len(missing_chunks_df)
-    missing_count = len(missing_chunks_df)
-
-    print(f"Total documents: {total_docs}")
-    print(f"Properly chunked documents: {properly_chunked}")
-    print(f"Documents missing chunks: {missing_count}")
-
-    if missing_count > 0:
-        print("\nDocuments missing chunks:")
-        for _, row in missing_chunks_df.iterrows():
-            doc_id = row["document_id"]
-            url = row.get("url", "N/A")
-            processed = row.get("processed", False)
-            print(f" - Document ID: {doc_id}, URL: {url}, Processed flag: {processed}")
-
-    return missing_chunks_df
-```
-
-```{python}
-LANCE_DB_PATH = "./lancedb"
-from lancedb import connect
-db = connect(LANCE_DB_PATH)
-doc_table = db.open_table("documents")
-chunk_table = db.open_table("chunks")
-missing_docs_df = check_chunk_status(doc_table, chunk_table)
-print(missing_docs_df)
+#
+#
+#
+#  Convert to Pandas DataFrame (recommended for display)
+df = chunk_table.to_pandas()
+print(df)
 # this table includes document_id, url, and evaluation_id
-```
-
-### Generating AI-Enhanced metadata 
-
-Last, we run a function to generate metadata... 
-
-The function will load the "evaluations" table within the db --connect(LANCE_DB_PATH) --
-then loop around each evaluation_id within the "chunks" table to retrive the context - and 
-perform an LLM call to then generate as an output additional metadata
-Then it will update the evaluations table with the output for each evaluation -
-At the end it will save a json file with a dump of the evaluations table        
-
- 
-```{python}
-# setting up for metadata generation
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
 import json
 import time
 import logging
@@ -1209,21 +1126,13 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from langchain_openai import AzureChatOpenAI 
-llm_accurate0 = AzureChatOpenAI(
+llm_accurate = AzureChatOpenAI(
     deployment_name=os.getenv("AZURE_DEPLOYMENT_NAME"),
     api_key=os.getenv("AZURE_OPENAI_API_KEY"),
     azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
     api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
     temperature=0.1,
     max_tokens=1000
-)
-## another instance with a better model that can handle longer context...
-llm_accurate = AzureChatOpenAI(
-    deployment_name=os.getenv("model_name"),
-    api_key=os.getenv("subscription_key"),
-    azure_endpoint=os.getenv("endpoint"),
-    api_version=os.getenv("api_version"),
-    temperature=0.1
 )
 
 # Set up logging
@@ -1235,44 +1144,6 @@ db = connect(LANCE_DB_PATH)
 eval_table = db.open_table("evaluations")
 chunk_table = db.open_table("chunks")
 
-import numpy as np
-
-def clean_json(obj):
-    """Recursively clean an object to make it JSON serializable, handling None values."""
-    if obj is None:
-        return []  # Convert None to empty list for join operations
-    
-    if isinstance(obj, dict):
-        return {k: clean_json(v) for k, v in obj.items()}
-    elif isinstance(obj, list):
-        return [clean_json(v) for v in obj]
-    elif isinstance(obj, np.ndarray):
-        return obj.tolist()
-    elif hasattr(obj, "tolist"):  # for other array-like objects
-        return obj.tolist()
-    elif isinstance(obj, (np.integer, np.floating)):
-        return obj.item()
-    elif isinstance(obj, (str, int, float, bool)):
-        return obj
-    elif isinstance(obj, (list, tuple)):
-        return [clean_json(v) for v in obj]    
-    elif isinstance(obj, (np.ndarray, np.generic)):
-        return obj.tolist()    
-    else:
-        return str(obj)  # fallback for any other type
-
-# Use this safer approach when building context in the prompt
-def safe_join(items, sep=', '):
-    if items is None:
-        return ''
-    try:
-        if hasattr(items, 'tolist'):  # Handle numpy arrays
-            items = items.tolist()
-        return sep.join(str(item) for item in items)
-    except (TypeError, AttributeError):
-        return '' 
-
-      
 
 def call_llm_with_retries(prompt, max_retries=4, delay=2):
     for attempt in range(max_retries):
@@ -1323,7 +1194,7 @@ def get_context_for_eval(eval_row, query, chunk_table):
     query_embedding = embedding_fn(query)
     results = chunk_table.search(query_embedding).where(
         f"evaluation_id = '{evaluation_id}'", prefilter=True
-    ).limit(3).to_pandas()
+    ).limit(5).to_pandas()
 
     if results.empty:
         logging.warning(f"No chunks found for evaluation_id={evaluation_id}")
@@ -1334,26 +1205,26 @@ def get_context_for_eval(eval_row, query, chunk_table):
         for _, row in results.iterrows()
     ])
     return context
-```
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
 
-We will use the  __PICO structured framework__ as an approach to represent the causal knowledge found in the Evaluation (cf. [EconBERTa: Towards Robust Extraction of Named Entities in Economics](https://aclanthology.org/2023.findings-emnlp.774.pdf)). This scheme helps in systematically organizing and analyzing the effectiveness of interventions by comparing outcomes between groups:
-
-__1. Population (P)__:  The group of individuals or units (e.g., households, schools, firms) affected by the intervention. The target population shall be clearly defined (e.g., smallholder farmers, primary school students, unemployed youth) and it shall Include eligibility criteria (e.g., age, socioeconomic status, geographic location).
-
-__2. Intervention (I)__: The program, policy, or treatment whose effect is being evaluated. Describes the active component being tested (e.g., cash transfers, training workshops, new teaching methods). Should specify dosage, duration, and delivery mechanism.
-
-__3. Comparators (C)__: The counterfactual scenario—what would have happened without the intervention. Ideally involves a control group (if the study approach is randomized or quasi-experimental) that does not receive the intervention. Alternatively refers to "Business-as-usual" groups, placebo interventions, or different treatment arms.
-
-__4. Outcome (O)__:The measurable effects or endpoints used to assess the intervention’s impact. Includes primary outcomes (main indicators of interest, e.g., school enrollment rates, income levels) and secondary outcomes (e.g., health, empowerment). Should be specific, measurable, and time-bound (e.g., "child literacy scores after 12 months").
-
-
-Using such approach, we can ensure Clarity (the research question is well-defined and testable), Causal Inference (isolate the effect of the intervention by comparing treated and untreated groups), Replicability (to potentially extrapolate the findings) and Relevance (linking outcomes to real-world decision-making).
-
-
-```{python}
-# descriptive
 from langchain.schema import HumanMessage
-from json import JSONDecodeError
+
 # Define query and embedding
 query_descriptive = " Population, Intervention, Outcome, comparator"
 
@@ -1367,11 +1238,10 @@ def generate_metadata_for_evaluation_metadata_descriptive(eval_row, query_descri
 
     You are an expert in public program and policy evaluation implementation. 
     
-    Your task is to generate evaluation metadata related to a specific evaluation excercise:
-    
-    - Summary:  Provide a summary of the 5 key main generic recommandations from the evaluation
+    Your task is to generate evaluation metadata related to a specific evaluation.
 
-    - Population:  The group of individuals or units (e.g., households, schools, firms) affected by the intervention. 
+    Identify: 
+    - Population:  The group of individuals or units (e.g., households, schools, firms) affected by the intervention. The target population shall be clearly defined (e.g., smallholder farmers, primary school students, unemployed youth) and it shall Include eligibility criteria (e.g., age, socioeconomic status, geographic location).
 
     - Intervention: The program, policy, or treatment whose effect is being evaluated. Describes the active component being tested (e.g., cash transfers, training workshops, new teaching methods). Should specify dosage, duration, and delivery mechanism.
 
@@ -1389,12 +1259,12 @@ def generate_metadata_for_evaluation_metadata_descriptive(eval_row, query_descri
     - Type of Evaluation Timing: {eval_row.get('type_of_evaluation_timing')}
     - Thematic Areas: {eval_row.get('migration_thematic_areas')}
     - Cross cutting themes: {eval_row.get('relevant_crosscutting_themes')}
-    - Countries: {safe_join(eval_row.get('geography'))}
+    - Countries: {', '.join(eval_row.get('geography', []))}
 
     and some Relevant Document Context:
     {context}
 
-    Return ONLY valid JSON with the following structure:
+        Return ONLY valid JSON with the following structure:
     {{
         "summary":  "" ,
         "population": ["population1", "population2", ...],
@@ -1407,43 +1277,42 @@ def generate_metadata_for_evaluation_metadata_descriptive(eval_row, query_descri
     1. Each array should contain no more than 10 items
     2. Items should be distinct and non-repetitive
     3. Return ONLY the JSON object, no additional text
-    4. Anchor the response into the provided context and exisiting metadata
 
     """
 
    # logging.info(f"Sending prompt to LLM for evaluation_id={evaluation_id}:\n{prompt}")
     
-    logging.info(f"Sending prompt to LLM for Description evaluation_id={evaluation_id} ")
+    logging.info(f"Sending prompt to LLM for evaluation_id={evaluation_id} ")
     try:
         metadata = call_llm_with_retries(prompt)
         eval_row.update(metadata)
         #logging.info(f"Processed evaluation_id={evaluation_id}")
-        logging.info(f"Description {eval_row}")
+        logging.info(f" {eval_row}")
         return eval_row
     except Exception as e:
-        logging.error(f"LLM failed for Description of evaluation_id={evaluation_id} | {str(e)}")
+        logging.error(f"LLM failed for evaluation_id={evaluation_id} | {str(e)}")
         return None
 
-```
+#
+#
+#
 
-```{python}
-#methodo
 from langchain.schema import HumanMessage
 
 # Define query and embedding
 query_methodo = "Study design, Methodology, Sample, Data Collection"
 
-def generate_metadata_for_evaluation_metadata_methodo(eval_row, query_methodo, chunk_table):
+def generate_metadata_for_evaluation_metadata_methodo(eval_row, query, chunk_table):
     """Process one evaluation row and return updated row with metadata."""
     evaluation_id = eval_row["evaluation_id"]
 
-    context = get_context_for_eval(eval_row, query_methodo, chunk_table)
+    context = get_context_for_eval(eval_row, query, chunk_table)
 
     prompt = f"""
 
     You are an expert in public program and policy evaluation implementation. 
     
-    Your task is to generate the following evaluation metadata about the methodology from a specific evaluation excercise: 
+    Your task is to generate evaluation metadata about the evaluation methodology: 
     - evaluation type
     - study_design
     - methodology (qualitative, quantitative, mixed methods)
@@ -1468,7 +1337,7 @@ def generate_metadata_for_evaluation_metadata_methodo(eval_row, query_methodo, c
     - "Hybrid Type 3: Primarily tests implementation strategies while collecting limited intervention effectiveness data.",
     - "Case Study / Mixed-methods: In-depth exploration of implementation in one or few settings using qualitative and/or quantitative data." 
 
-    Below are some existing Metadata on this specific evaluation:
+    Below are some existing Metadata on this evaluation:
     - Title: {eval_row.get('title')}
     - Year: {eval_row.get('year')}
     - Author: {eval_row.get('author')}
@@ -1477,23 +1346,24 @@ def generate_metadata_for_evaluation_metadata_methodo(eval_row, query_methodo, c
     - Type of Evaluation Timing: {eval_row.get('type_of_evaluation_timing')}
     - Thematic Areas: {eval_row.get('migration_thematic_areas')}
     - Cross cutting themes: {eval_row.get('relevant_crosscutting_themes')}
-    - Countries: {safe_join(eval_row.get('geography'))}
-    - Summary: {eval_row.get('summary')}
-    - Populations: {safe_join(eval_row.get('population'))}
-    - Interventions: {safe_join(eval_row.get('intervention' ))}
-    - Compators: {safe_join(eval_row.get('comparator'))}
-    - Outcomes: {safe_join(eval_row.get('outcome'))}
+    - Countries: {', '.join(eval_row.get('geography', []))}
+    - Summary: {eval_row.get('summary":  "" ,
+    - Populations: {', '.join(eval_row.get('population', []))}
+    - Interventions: {', '.join(eval_row.get('intervention', []))}
+    - Compators: {', '.join(eval_row.get('comparator', []))}
+    - Outcomes: {', '.join(eval_row.get('outcome', []))}
 
 
-    and some Relevant Document Context  on this specific evaluation:
+    and some Relevant Document Context:
     {context}
 
-    Return ONLY valid JSON with the following structure:
+        Return ONLY valid JSON with the following structure:
     {{
         "methodology":  "" ,
         "evaluation_type":  ["evaluation_type1", "evaluation_type2", ...] ,
         "study_design":  "",
-        "sample_size":  "" , 
+        "sample_size":  "" ,
+        "population": ["population1", "population2", ...],
         "data_collection_techniques": ["data_collection_techniques1", "data_collection_techniques2", ...] 
     }}
 
@@ -1501,27 +1371,26 @@ def generate_metadata_for_evaluation_metadata_methodo(eval_row, query_methodo, c
     1. Each array should contain no more than 10 items
     2. Items should be distinct and non-repetitive
     3. Return ONLY the JSON object, no additional text
-    4. Anchor the response into the provided context and exisiting metadata
 
     """
 
    # logging.info(f"Sending prompt to LLM for evaluation_id={evaluation_id}:\n{prompt}")
     
-    logging.info(f"Sending prompt to LLM for methodology  evaluation_id={evaluation_id} ")
+    logging.info(f"Sending prompt to LLM for evaluation_id={evaluation_id} ")
     try:
         metadata = call_llm_with_retries(prompt)
         eval_row.update(metadata)
-        #logging.info(f"Processed methodology  evaluation_id={evaluation_id}")
+        #logging.info(f"Processed evaluation_id={evaluation_id}")
         logging.info(f" {eval_row}")
         return eval_row
     except Exception as e:
-        logging.error(f"LLM failed for methodology of evaluation_id={evaluation_id} | {str(e)}")
+        logging.error(f"LLM failed for evaluation_id={evaluation_id} | {str(e)}")
         return None
 
-```
+#
+#
+#
 
-```{python}
-# evidence
 from langchain.schema import HumanMessage
 
 # Define query and embedding
@@ -1551,23 +1420,15 @@ def generate_metadata_for_evaluation_metadata_evidence(eval_row, query, chunk_ta
     - Type of Evaluation Timing: {eval_row.get('type_of_evaluation_timing')}
     - Thematic Areas: {eval_row.get('migration_thematic_areas')}
     - Cross cutting themes: {eval_row.get('relevant_crosscutting_themes')}
-    - Countries: {safe_join(eval_row.get('geography', []))}
-    - Summary: {eval_row.get('summary')}
-    - Populations: {safe_join(eval_row.get('population'))}
-    - Interventions: {safe_join(eval_row.get('intervention'))}
-    - Compators: {safe_join(eval_row.get('comparator'))}
-    - Outcomes: {safe_join(eval_row.get('outcome'))}
-    - Study Design: {eval_row.get('study_design')}
-    - Evaluation type:  {safe_join(eval_row.get('evaluation_type'))}
-    - Methodology: {eval_row.get('methodology')}
-    - Sample size: {eval_row.get('sample_size')}
-    - Data collection techniques:  {safe_join(eval_row.get('data_collection_techniques'))}
+    - Countries: {', '.join(eval_row.get('geography', []))}
+    
+    - Study Design: {eval_row.get('study_design":  ""
+    - Cross cutting themes: {eval_row.get('evaluation_type":  ["evaluation_type1", "evaluation_type2", ...] ,
 
- 
     and some Relevant Document Context:
     {context}
 
-    Return ONLY valid JSON with the following structure:
+        Return ONLY valid JSON with the following structure:
     {{
         "evidence_strength":  "" ,
         "limitations":  ["limitations1", "limitations2", ...]  
@@ -1577,30 +1438,27 @@ def generate_metadata_for_evaluation_metadata_evidence(eval_row, query, chunk_ta
     1. Each array should contain no more than 10 items
     2. Items should be distinct and non-repetitive
     3. Return ONLY the JSON object, no additional text
-    4. Anchor the response into the provided context and exisiting metadata
 
     """
 
    # logging.info(f"Sending prompt to LLM for evaluation_id={evaluation_id}:\n{prompt}")
     
-    logging.info(f"Sending prompt to LLM for Evidence evaluation_id={evaluation_id} ")
+    logging.info(f"Sending prompt to LLM for evaluation_id={evaluation_id} ")
     try:
         metadata = call_llm_with_retries(prompt)
         eval_row.update(metadata)
-        #logging.info(f"Processed Evidence evaluation_id={evaluation_id}")
+        #logging.info(f"Processed evaluation_id={evaluation_id}")
         logging.info(f" {eval_row}")
         return eval_row
     except Exception as e:
-        logging.error(f"LLM failed for Evidence evaluation_id={evaluation_id} | {str(e)}")
+        logging.error(f"LLM failed for evaluation_id={evaluation_id} | {str(e)}")
         return None
 
-```
- 
-
-```{python}
-# process all
-def generate_evaluation_metadata(eval_table, chunk_table, batch_size=10, output_file="all_evaluations_metadata.json"):
-    """Main function to generate metadata in batches and update the table, with incremental saving."""
+#
+#
+#
+def generate_evaluation_metadata(eval_table, chunk_table, batch_size=50):
+    """Main function to generate metadata in batches and update the table."""
     all_rows = eval_table.to_pandas().to_dict(orient="records")
     enriched_data = []
     total = len(all_rows)
@@ -1609,14 +1467,6 @@ def generate_evaluation_metadata(eval_table, chunk_table, batch_size=10, output_
     success = 0
     skipped = 0
 
-    # Initialize or load existing data if file exists
-    try:
-        with open(output_file, "r", encoding="utf-8") as f:
-            enriched_data = json.load(f)
-            logging.info(f"Loaded existing data with {len(enriched_data)} entries")
-    except (FileNotFoundError, json.JSONDecodeError):
-        pass
-
     for i in range(0, len(all_rows), batch_size):
         batch = all_rows[i:i+batch_size]
         enriched_batch = []
@@ -1624,57 +1474,59 @@ def generate_evaluation_metadata(eval_table, chunk_table, batch_size=10, output_
         for row in batch:
             enriched = generate_metadata_for_evaluation_metadata_descriptive(row, query, chunk_table)
             if enriched:
-                row = enriched  # update row with enriched version
+                enriched_batch.append(enriched)
+                row=enriched_batch
                 success += 1
             else:
                 skipped += 1
 
             enriched = generate_metadata_for_evaluation_metadata_methodo(row, query, chunk_table)
             if enriched:
-                row = enriched
+                enriched_batch.append(enriched)
+                row=enriched_batch
                 success += 1
             else:
                 skipped += 1
 
             enriched = generate_metadata_for_evaluation_metadata_evidence(row, query, chunk_table)
             if enriched:
-                row = enriched
+                enriched_batch.append(enriched)
                 success += 1
             else:
-                skipped += 1
-
-            enriched_batch.append(clean_json(row))
+                skipped += 1        
 
         if enriched_batch:
+           # eval_table.add(enriched_batch)
             enriched_data.extend(enriched_batch)
-            
-            # Incrementally save after each batch
-            with open(output_file, "w", encoding="utf-8") as f:
-                json.dump(enriched_data, f, ensure_ascii=False, indent=2)
-            
-            logging.info(f"Processed batch {i//batch_size + 1}, added {len(enriched_batch)} rows. Total so far: {len(enriched_data)}")
+            logging.info(f"Added batch of {len(enriched_batch)} rows.")
 
         time.sleep(2)  # prevent overloading LLM/API
 
     print(f"[✓] Metadata generation complete. Success: {success}, Skipped: {skipped}, Total: {total}")
     logging.info(f"Final counts — Success: {success}, Skipped: {skipped}, Total: {total}")
 
+    # Save to file
+   # with open("evaluations_metadata.json", "w", encoding="utf-8") as f:
+    #    json.dump(enriched_data, f, ensure_ascii=False, indent=2)
+    print("[✓] Metadata generation complete. Saved to app/evaluations_metadata.json")
+
     return enriched_data
-```
 
-Now let's run it!
-```{python}
-enriched_data= generate_evaluation_metadata(eval_table, chunk_table, output_file="all_evaluations_metadata2.json")
-```
-
- 
-
-## Step 2: Structured Information Extraction
-
-
-### Standard Questions
-
-```{python} 
+#
+#
+#
+#
+enriched_data= generate_evaluation_metadata(eval_table, chunk_table)
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
 # Define the list of experts on impact - outcome - organisation
 q_experts = [
    "<s> [INST] Instructions: Act as a public program evaluation expert working for UNHCR. Your specific area of expertise and focus is strictly on the Strategic Impact: ---Attaining favorable protection environments---: i.e., finding or recommendations that require a change in existing policy and regulations. [/INST]",
@@ -1729,11 +1581,11 @@ If the contexts do not contain the facts to answer the QUESTION, return {NONE}
 Be concise in the response and  when relevant include precise citations from the contexts. 
 [/INST] 
 """
-```
-
-###  Q&A Extraction
-
-```{python} 
+#
+#
+#
+#
+#
 qa_questions = [
     "What was the intervention type?",
     "What outcomes were observed?",
@@ -1756,11 +1608,11 @@ def generate_qas(text):
     return completion.choices[0].message.content
 
 df_docs["qa"] = df_docs["text"].apply(generate_qas)
-```
-
-### Hybrid Search in LanceDB
-
-```{python} 
+#
+#
+#
+#
+#
 # Sample hybrid search query
 query = "What works best to improve health outcomes for displaced persons?"
 
@@ -1770,10 +1622,10 @@ results = table.search(query_embedding).limit(5).to_list()
 for result in results:
     print(result['metadata'])
     print(result['text'][:500])
-```
-
-
-```{python} 
+#
+#
+#
+#
 def query_evidence(question: str, table: lancedb.db.LanceTable) -> Dict:
     """Enhanced query with hybrid search and evidence grading"""
     try:
@@ -1830,10 +1682,10 @@ def query_evidence(question: str, table: lancedb.db.LanceTable) -> Dict:
         print(f"Query error: {str(e)}")
         return {"error": str(e)}
 
-```
-
-
-```{python} 
+#
+#
+#
+#
 def extract_structured_info(table, iom_framework):
     """Extract structured information from reports using the IOM Results Framework"""
     # Generate questions based on the IOM framework
@@ -1911,9 +1763,9 @@ def generate_questions_from_framework(framework_df):
     
     return list(set(questions))  # Remove duplicates
 
-```
-
-```{python} 
+#
+#
+#
 def hybrid_search(table: lancedb.db.LanceTable, query: str, limit: int = 10) -> pd.DataFrame:
     """Perform hybrid (vector + full-text) search"""
     # Generate query embedding
@@ -1991,11 +1843,11 @@ def extract_structured_info(table: lancedb.db.LanceTable, iom_framework: pd.Data
     
     return pd.DataFrame(extracted_data)
 
-```
-
-## Step 3: Organize the Evidence
-
-```{python} 
+#
+#
+#
+#
+#
 def extract_information(text):
     # Use Azure OpenAI to extract information
     response = openai.Completion.create(
@@ -2006,42 +1858,42 @@ def extract_information(text):
     return response.choices[0].text.strip()
 
 df['structured_info'] = df['text'].apply(extract_information)
-```
-
-
-
-## Step 4: Generate Actionable and Generalizable Insights  
-
-One key challenge is How to generalize the findings from an evaluation from one place to another one? The [Generalizability Framework](https://ssir.org/articles/entry/the_generalizability_puzzle) provides some insights on how to do that.
-
-
-To implement this we will generate insights using AI-enabled Q&A on all previous Q&A:
-
-```{python} 
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
 def generate_insights(df):
     # Add your insight generation logic here
     return df
 
 df = generate_insights(df)
-```
-
-## Step 5: Identify Patterns and Gaps
-
-Identify patterns and gaps in the data:
-
-```{python} 
+#
+#
+#
+#
+#
+#
+#
 def identify_patterns(df):
     # Add your pattern identification logic here
     return df
 
 df = identify_patterns(df)
-```
-
-
-### Generate Deliverables
-
-
-```{python} 
+#
+#
+#
+#
+#
+#
+#
 def generate_deliverables(df):
     # Generate Q&A dataset
     qa_dataset = df[['question', 'answer']]
@@ -2058,11 +1910,11 @@ def generate_deliverables(df):
     return qa_dataset, synthesis_report
 
 qa_dataset, synthesis_report = generate_deliverables(df)
-```
-
-### Visualize Patterns & Gaps
-
-```{python} 
+#
+#
+#
+#
+#
 # Convert QA to structured fields (intervention, outcome, population, etc.)
 qa_df = pd.json_normalize(df_docs["qa"].apply(json.loads))
 
@@ -2076,9 +1928,9 @@ fig.show()
 # Heatmap Example
 heatmap_df = pd.crosstab(qa_df["intervention"], qa_df["outcome"])
 sns.heatmap(heatmap_df, annot=True, cmap="coolwarm")
-```
-
-```{python} 
+#
+#
+#
 def create_interactive_visualizations(extracted_data: pd.DataFrame):
     """Enhanced visualization functions"""
     # Prepare data
@@ -2113,11 +1965,11 @@ def create_interactive_visualizations(extracted_data: pd.DataFrame):
     
     return fig1, fig2, fig3
 
-```
-
-
-
-```{python} 
+#
+#
+#
+#
+#
 def visualize_evidence_map(extracted_data):
     """Create interactive visualizations of the evidence map"""
     
@@ -2188,27 +2040,30 @@ def generate_synthesis_report(extracted_data):
     
     return response.choices[0].message.content
 
-```
-
-
-### Save Deliverables
-
-Save the deliverables to files:
-
-```{python} 
+#
+#
+#
+#
+#
+#
+#
+#
 qa_dataset.to_csv('qa_dataset.csv', index=False)
 synthesis_report.to_csv('synthesis_report.csv')
-```
-
-
-## Conclusions - and potential extension...
-
-* Web interface (Streamlit, Gradio, etc.)
-
-* Periodic syncing with new evaluations via web scraping
-
-* Integration with Hugging Face for fine-tuning a summarization or Q&A model
-
- 
-
-
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
