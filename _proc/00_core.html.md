@@ -11,10 +11,15 @@ title: Workflow Description
 ## Introduction
 
 This notebook implements an evidence mapping system with:
+
  - Batch processing for scalability
+
  - Robust error handling and retries
+
  - Embedding caching
+
  - Hybrid search (vector + full-text)
+ 
  - Local LanceDB deployment
 
 we can follow these steps:
@@ -71,20 +76,50 @@ then Restart the jupyter kernel for this notebook
 
 ### Initialise LLM API
 
+::: {#cell-4 .cell}
+``` {.python .cell-code}
+import os
+from dotenv import load_dotenv
+# Load environment variables
+load_dotenv()
+
+from langchain_openai import AzureChatOpenAI 
+# Initialize LLM with higher temperature for creative question generation
+llm_creative = AzureChatOpenAI(
+    deployment_name=os.getenv("AZURE_DEPLOYMENT_NAME"),
+    api_key=os.getenv("AZURE_OPENAI_API_KEY"),
+    azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
+    api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+    temperature=0.7,
+    max_tokens=500
+)
+
+llm_accurate = AzureChatOpenAI(
+    deployment_name=os.getenv("AZURE_DEPLOYMENT_NAME"),
+    api_key=os.getenv("AZURE_OPENAI_API_KEY"),
+    azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
+    api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+    temperature=0.1,
+    max_tokens=1000
+)
+```
+:::
+
+
 ### Load PDF library and Strategic Results Framework
 
 The library
 
 ---
 
-[source](https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L139){target="_blank" style="float:right; font-size:smaller"}
+[source](https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L110){target="_blank" style="float:right; font-size:smaller"}
 
 ### load_evaluations
 
 >      load_evaluations (file_path, json_path)
 
 
-::: {#cell-6 .cell}
+::: {#cell-7 .cell}
 ``` {.python .cell-code}
 library =load_evaluations("reference/Evaluation_repository.xlsx","reference/Evaluation_repository.json" )
 ```
@@ -95,7 +130,7 @@ Now the framework
 
 ---
 
-[source](https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L121){target="_blank" style="float:right; font-size:smaller"}
+[source](https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L92){target="_blank" style="float:right; font-size:smaller"}
 
 ### load_iom_framework
 
@@ -104,7 +139,7 @@ Now the framework
 *Load and validate IOM framework*
 
 
-::: {#cell-9 .cell}
+::: {#cell-10 .cell}
 ``` {.python .cell-code}
 framework= load_iom_framework("reference/Strategic_Result_Framework.xlsx")
 ```
@@ -117,7 +152,7 @@ So we have a collection of Evaluation documents. We have metadata for each Evalu
 
 See an example below
 
-::: {#cell-11 .cell}
+::: {#cell-12 .cell}
 ``` {.python .cell-code}
 [
     {
@@ -302,7 +337,7 @@ Let's start by loading the library from json...
 
 ---
 
-[source](https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L139){target="_blank" style="float:right; font-size:smaller"}
+[source](https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L110){target="_blank" style="float:right; font-size:smaller"}
 
 ### load_evaluations
 
@@ -319,7 +354,7 @@ Returns:
 
 Load a small subset for testing..
 
-::: {#cell-16 .cell}
+::: {#cell-17 .cell}
 ``` {.python .cell-code}
 # Load your   metadata
 #evaluation_data =  load_evaluations("reference/Evaluation_repository_test.json")
@@ -334,7 +369,7 @@ Id Generation
 
 ---
 
-[source](https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L173){target="_blank" style="float:right; font-size:smaller"}
+[source](https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L144){target="_blank" style="float:right; font-size:smaller"}
 
 ### generate_id
 
@@ -343,7 +378,7 @@ Id Generation
 *Generate a deterministic ID from text*
 
 
-::: {#cell-19 .cell}
+::: {#cell-20 .cell}
 ``` {.python .cell-code}
 eval_id = generate_id( "aaa")
 print({eval_id})
@@ -353,7 +388,7 @@ print({eval_id})
 
 ---
 
-[source](https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L183){target="_blank" style="float:right; font-size:smaller"}
+[source](https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L154){target="_blank" style="float:right; font-size:smaller"}
 
 ### force_delete_directory
 
@@ -362,7 +397,7 @@ print({eval_id})
 *Robust directory deletion with retries and delay*
 
 
-::: {#cell-21 .cell}
+::: {#cell-22 .cell}
 ``` {.python .cell-code}
 force_delete_directory(LANCE_DB_PATH)
 ```
@@ -373,7 +408,7 @@ We start prefilling our vector database with the metadata
 
 ---
 
-[source](https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L212){target="_blank" style="float:right; font-size:smaller"}
+[source](https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L183){target="_blank" style="float:right; font-size:smaller"}
 
 ### initialise_knowledge_base
 
@@ -384,7 +419,7 @@ We start prefilling our vector database with the metadata
 
 ---
 
-[source](https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L205){target="_blank" style="float:right; font-size:smaller"}
+[source](https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L176){target="_blank" style="float:right; font-size:smaller"}
 
 ### safe_get
 
@@ -393,7 +428,7 @@ We start prefilling our vector database with the metadata
 *Safely get value from dict, handle NaN and missing keys*
 
 
-::: {#cell-25 .cell}
+::: {#cell-26 .cell}
 ``` {.python .cell-code}
 LANCE_DB_PATH = "./lancedb"
 db = connect(LANCE_DB_PATH)
@@ -405,7 +440,7 @@ for evaluation in evaluation_data:  # Assuming evaluation_data is a list
 
 Let's check each evaluation is in the DB -
 
-::: {#cell-27 .cell}
+::: {#cell-28 .cell}
 ``` {.python .cell-code}
 eval_table = db.open_table("evaluations")
 #  Convert to Pandas DataFrame (recommended for display)
@@ -417,7 +452,7 @@ print(df)
 
 and the corresponding documents...
 
-::: {#cell-29 .cell}
+::: {#cell-30 .cell}
 ``` {.python .cell-code}
 LANCE_DB_PATH = "./lancedb"
 from lancedb import connect
@@ -443,7 +478,7 @@ Now we build a smart function to download the files from  URL:
 
 ---
 
-[source](https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L375){target="_blank" style="float:right; font-size:smaller"}
+[source](https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L346){target="_blank" style="float:right; font-size:smaller"}
 
 ### download_documents
 
@@ -464,7 +499,7 @@ brew install --cask libreoffice
 
 ---
 
-[source](https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L492){target="_blank" style="float:right; font-size:smaller"}
+[source](https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L463){target="_blank" style="float:right; font-size:smaller"}
 
 ### convert_file_to_pdf
 
@@ -476,7 +511,7 @@ Works on Windows, macOS, and Linux.*
 
 ---
 
-[source](https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L456){target="_blank" style="float:right; font-size:smaller"}
+[source](https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L427){target="_blank" style="float:right; font-size:smaller"}
 
 ### find_libreoffice_exec
 
@@ -488,7 +523,7 @@ Returns path to LibreOffice CLI tool or raises an error.*
 
 Testing this...
 
-::: {#cell-36 .cell}
+::: {#cell-37 .cell}
 ``` {.python .cell-code}
 doc_table = db.open_table("documents")
 os.environ["PDF_Library"] = "Evaluation_Library"
@@ -517,7 +552,7 @@ Building a function that
 
 Test the embeddings through lanchain....
 
-::: {#cell-38 .cell}
+::: {#cell-39 .cell}
 ``` {.python .cell-code}
 test_embedding = embedding_model.embed_query("Hello world")
 print(f"Embedding vector length: {len(test_embedding)}")
@@ -544,7 +579,7 @@ print(embedding_fn(["Hello world"])[0])
 :::
 
 
-::: {#cell-39 .cell}
+::: {#cell-40 .cell}
 ``` {.python .cell-code}
 print(dir(embedding_fn))
 help(embedding_fn)
@@ -554,7 +589,7 @@ help(embedding_fn)
 
 So first we create the chunk table in lancedb 
 
-::: {#cell-41 .cell}
+::: {#cell-42 .cell}
 ``` {.python .cell-code}
 from pydantic import BaseModel
 from lancedb.pydantic import Vector
@@ -580,7 +615,7 @@ and then the function creating embeddings chunck for each document
 
 ---
 
-[source](https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L586){target="_blank" style="float:right; font-size:smaller"}
+[source](https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L557){target="_blank" style="float:right; font-size:smaller"}
 
 ### process_documents_to_chunks
 
@@ -589,7 +624,7 @@ and then the function creating embeddings chunck for each document
 
 Now let's run this! 
 
-::: {#cell-45 .cell}
+::: {#cell-46 .cell}
 ``` {.python .cell-code}
 LANCE_DB_PATH = "./lancedb"
 from lancedb import connect
@@ -605,14 +640,14 @@ Checking the status of the chunking process
 
 ---
 
-[source](https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L724){target="_blank" style="float:right; font-size:smaller"}
+[source](https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L695){target="_blank" style="float:right; font-size:smaller"}
 
 ### check_chunk_status
 
 >      check_chunk_status (doc_table, chunk_table)
 
 
-::: {#cell-48 .cell}
+::: {#cell-49 .cell}
 ``` {.python .cell-code}
 LANCE_DB_PATH = "./lancedb"
 from lancedb import connect
@@ -638,7 +673,7 @@ At the end it will save a json file with a dump of the evaluations table
 
 ---
 
-[source](https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L883){target="_blank" style="float:right; font-size:smaller"}
+[source](https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L854){target="_blank" style="float:right; font-size:smaller"}
 
 ### get_context_for_eval
 
@@ -647,7 +682,7 @@ At the end it will save a json file with a dump of the evaluations table
 
 ---
 
-[source](https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L841){target="_blank" style="float:right; font-size:smaller"}
+[source](https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L812){target="_blank" style="float:right; font-size:smaller"}
 
 ### call_llm_with_retries
 
@@ -656,7 +691,7 @@ At the end it will save a json file with a dump of the evaluations table
 
 ---
 
-[source](https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L829){target="_blank" style="float:right; font-size:smaller"}
+[source](https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L800){target="_blank" style="float:right; font-size:smaller"}
 
 ### safe_join
 
@@ -665,7 +700,7 @@ At the end it will save a json file with a dump of the evaluations table
 
 ---
 
-[source](https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L804){target="_blank" style="float:right; font-size:smaller"}
+[source](https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L775){target="_blank" style="float:right; font-size:smaller"}
 
 ### clean_json
 
@@ -690,7 +725,7 @@ Using such approach, we can ensure Clarity (the research question is well-define
 
 ---
 
-[source](https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L913){target="_blank" style="float:right; font-size:smaller"}
+[source](https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L884){target="_blank" style="float:right; font-size:smaller"}
 
 ### generate_metadata_for_evaluation_metadata_descriptive
 
@@ -703,7 +738,7 @@ Using such approach, we can ensure Clarity (the research question is well-define
 
 ---
 
-[source](https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L991){target="_blank" style="float:right; font-size:smaller"}
+[source](https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L962){target="_blank" style="float:right; font-size:smaller"}
 
 ### generate_metadata_for_evaluation_metadata_methodo
 
@@ -716,7 +751,7 @@ Using such approach, we can ensure Clarity (the research question is well-define
 
 ---
 
-[source](https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L1088){target="_blank" style="float:right; font-size:smaller"}
+[source](https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L1059){target="_blank" style="float:right; font-size:smaller"}
 
 ### generate_metadata_for_evaluation_metadata_evidence
 
@@ -728,7 +763,7 @@ Using such approach, we can ensure Clarity (the research question is well-define
 
 ---
 
-[source](https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L1162){target="_blank" style="float:right; font-size:smaller"}
+[source](https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L1133){target="_blank" style="float:right; font-size:smaller"}
 
 ### generate_evaluation_metadata
 
@@ -741,7 +776,7 @@ Using such approach, we can ensure Clarity (the research question is well-define
 
 Now let's run it!
 
-::: {#cell-60 .cell}
+::: {#cell-61 .cell}
 ``` {.python .cell-code}
 # Initialize DB
 LANCE_DB_PATH = "./lancedb"

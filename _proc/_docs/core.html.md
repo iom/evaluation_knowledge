@@ -5,10 +5,17 @@
 
 ## Introduction
 
-This notebook implements an evidence mapping system with: - Batch
-processing for scalability - Robust error handling and retries -
-Embedding caching - Hybrid search (vector + full-text) - Local LanceDB
-deployment
+This notebook implements an evidence mapping system with:
+
+- Batch processing for scalability
+
+- Robust error handling and retries
+
+- Embedding caching
+
+- Hybrid search (vector + full-text)
+
+- Local LanceDB deployment
 
 we can follow these steps:
 
@@ -61,6 +68,33 @@ then Restart the jupyter kernel for this notebook
 
 ### Initialise LLM API
 
+``` python
+import os
+from dotenv import load_dotenv
+# Load environment variables
+load_dotenv()
+
+from langchain_openai import AzureChatOpenAI 
+# Initialize LLM with higher temperature for creative question generation
+llm_creative = AzureChatOpenAI(
+    deployment_name=os.getenv("AZURE_DEPLOYMENT_NAME"),
+    api_key=os.getenv("AZURE_OPENAI_API_KEY"),
+    azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
+    api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+    temperature=0.7,
+    max_tokens=500
+)
+
+llm_accurate = AzureChatOpenAI(
+    deployment_name=os.getenv("AZURE_DEPLOYMENT_NAME"),
+    api_key=os.getenv("AZURE_OPENAI_API_KEY"),
+    azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT"),
+    api_version=os.getenv("AZURE_OPENAI_API_VERSION"),
+    temperature=0.1,
+    max_tokens=1000
+)
+```
+
 ### Load PDF library and Strategic Results Framework
 
 The library
@@ -68,7 +102,7 @@ The library
 ------------------------------------------------------------------------
 
 <a
-href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L139"
+href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L110"
 target="_blank" style="float:right; font-size:smaller">source</a>
 
 ### load_evaluations
@@ -84,7 +118,7 @@ Now the framework
 ------------------------------------------------------------------------
 
 <a
-href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L121"
+href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L92"
 target="_blank" style="float:right; font-size:smaller">source</a>
 
 ### load_iom_framework
@@ -293,7 +327,7 @@ Let’s start by loading the library from json…
 ------------------------------------------------------------------------
 
 <a
-href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L139"
+href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L110"
 target="_blank" style="float:right; font-size:smaller">source</a>
 
 ### load_evaluations
@@ -321,7 +355,7 @@ Id Generation
 ------------------------------------------------------------------------
 
 <a
-href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L173"
+href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L144"
 target="_blank" style="float:right; font-size:smaller">source</a>
 
 ### generate_id
@@ -338,7 +372,7 @@ print({eval_id})
 ------------------------------------------------------------------------
 
 <a
-href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L183"
+href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L154"
 target="_blank" style="float:right; font-size:smaller">source</a>
 
 ### force_delete_directory
@@ -356,7 +390,7 @@ We start prefilling our vector database with the metadata
 ------------------------------------------------------------------------
 
 <a
-href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L212"
+href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L183"
 target="_blank" style="float:right; font-size:smaller">source</a>
 
 ### initialise_knowledge_base
@@ -368,7 +402,7 @@ target="_blank" style="float:right; font-size:smaller">source</a>
 ------------------------------------------------------------------------
 
 <a
-href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L205"
+href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L176"
 target="_blank" style="float:right; font-size:smaller">source</a>
 
 ### safe_get
@@ -425,7 +459,7 @@ to pdf
 ------------------------------------------------------------------------
 
 <a
-href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L375"
+href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L346"
 target="_blank" style="float:right; font-size:smaller">source</a>
 
 ### download_documents
@@ -447,7 +481,7 @@ brew install --cask libreoffice
 ------------------------------------------------------------------------
 
 <a
-href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L492"
+href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L463"
 target="_blank" style="float:right; font-size:smaller">source</a>
 
 ### convert_file_to_pdf
@@ -460,7 +494,7 @@ headless mode. Works on Windows, macOS, and Linux.*
 ------------------------------------------------------------------------
 
 <a
-href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L456"
+href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L427"
 target="_blank" style="float:right; font-size:smaller">source</a>
 
 ### find_libreoffice_exec
@@ -555,7 +589,7 @@ and then the function creating embeddings chunck for each document
 ------------------------------------------------------------------------
 
 <a
-href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L586"
+href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L557"
 target="_blank" style="float:right; font-size:smaller">source</a>
 
 ### process_documents_to_chunks
@@ -578,7 +612,7 @@ Checking the status of the chunking process
 ------------------------------------------------------------------------
 
 <a
-href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L724"
+href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L695"
 target="_blank" style="float:right; font-size:smaller">source</a>
 
 ### check_chunk_status
@@ -610,7 +644,7 @@ will save a json file with a dump of the evaluations table
 ------------------------------------------------------------------------
 
 <a
-href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L883"
+href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L854"
 target="_blank" style="float:right; font-size:smaller">source</a>
 
 ### get_context_for_eval
@@ -620,7 +654,7 @@ target="_blank" style="float:right; font-size:smaller">source</a>
 ------------------------------------------------------------------------
 
 <a
-href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L841"
+href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L812"
 target="_blank" style="float:right; font-size:smaller">source</a>
 
 ### call_llm_with_retries
@@ -630,7 +664,7 @@ target="_blank" style="float:right; font-size:smaller">source</a>
 ------------------------------------------------------------------------
 
 <a
-href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L829"
+href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L800"
 target="_blank" style="float:right; font-size:smaller">source</a>
 
 ### safe_join
@@ -640,7 +674,7 @@ target="_blank" style="float:right; font-size:smaller">source</a>
 ------------------------------------------------------------------------
 
 <a
-href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L804"
+href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L775"
 target="_blank" style="float:right; font-size:smaller">source</a>
 
 ### clean_json
@@ -689,7 +723,7 @@ outcomes to real-world decision-making).
 ------------------------------------------------------------------------
 
 <a
-href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L913"
+href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L884"
 target="_blank" style="float:right; font-size:smaller">source</a>
 
 ### generate_metadata_for_evaluation_metadata_descriptive
@@ -703,7 +737,7 @@ target="_blank" style="float:right; font-size:smaller">source</a>
 ------------------------------------------------------------------------
 
 <a
-href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L991"
+href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L962"
 target="_blank" style="float:right; font-size:smaller">source</a>
 
 ### generate_metadata_for_evaluation_metadata_methodo
@@ -717,7 +751,7 @@ target="_blank" style="float:right; font-size:smaller">source</a>
 ------------------------------------------------------------------------
 
 <a
-href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L1088"
+href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L1059"
 target="_blank" style="float:right; font-size:smaller">source</a>
 
 ### generate_metadata_for_evaluation_metadata_evidence
@@ -730,7 +764,7 @@ target="_blank" style="float:right; font-size:smaller">source</a>
 ------------------------------------------------------------------------
 
 <a
-href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L1162"
+href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L1133"
 target="_blank" style="float:right; font-size:smaller">source</a>
 
 ### generate_evaluation_metadata
