@@ -33,9 +33,11 @@ we’d have:
 - Faster identification of promising approaches to test
 - Better understanding of when and how to adapt programs
 
-This tool could fundamentally change how evidence flows through the
-humanitarian system - from slow, siloed learning to rapid, networked
-knowledge sharing.
+This tool can not only inform future evaluation design, guide strategic
+planning, and support the development of robust, evidence-based project
+proposals and strategic plan, but also could fundamentally change how
+evidence flows through the humanitarian system - from slow, siloed
+learning to rapid, networked knowledge sharing.
 
 ## Some examples of Evidence Maps:
 
