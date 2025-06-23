@@ -1,0 +1,102 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "evaluation_knowledge",
+    "section": "",
+    "text": "An Evidence Map is a structured, visual tool that organizes what we know—and don’t know—about programs, policies, and interventions. Think of it as a research and evaluation landscape that helps understand how the evidence available is distributed against a framework of reference: for example, the Sustainable Development Goals.\nIt allows us to quickly identify:\n\nWhich interventions have been evaluated\n\nWhere they were implemented\n\nWhat outcomes were observed\n\nWhere critical knowledge gaps remain\n\nThis approach is especially valuable for evidence-informed project design, particularly when time or resources limit the ability to read through hundreds of individual evaluation reports.\n\n\n\n\nEvidence and Gap Maps relating to Sustainable Development Goals\nKnown from birth: Generating and using evidence to strengthen birth registration systems in Africa (UNICEF)\nChild and Adolescent Mental Health and Psychosocial Support Interventions: An evidence and gap map of low- and middle-income countries (Report)\nYouth Futures Foundation Evidence & Gap Map on Interventions to Increase Youth Employment (Map; Report)\nEvidence map by the UNSDG System-Wide Evaluation Office (SWEO) mapping UN evaluations against the 2024 Quadrennial Comprehensive Policy Review (QCPR)\nUNICEF Evidence Map example).\n\n\n\n\nEvidence Maps are relatively established tools that started being common before the popularization of LLMs and AI in general. Their production generally entails a large amount of staff-hours spent on reviewing documentation and “tagging” it, with more or less articulated arrangements for source selection and cross-verification of the human-led classification. Recent practice in evidence mapping focuses on the automation of different steps of the map production process via AI.\nThe goal of this exercise is to create an AI-powered open source application capable of accurately ““tagging” evaluation reports against the IOM Strategic Result Framework and the Global Compact on Migration, two important tools that guide the action of IOM and other entities in the humanitarian and development space.\nRather than a fully automated tagging tool, the instrument will be used in the context of a structured and efficient human-machine collaboration protocol whereby the relative strengths of each are leveraged. This initiative aims at producing a fully reproducible solution that is not only scalable, but also easy to repurpose for other applications in the humanitarian and development space.\nThe goal of this exercise is to inform future evaluation design, guide strategic planning, and support the development of robust, evidence-based project proposals and strategic plan.\nIn addition, such AI-enhanced approach shall help to manage evaluation output as “LivingEvidence” - aka looking at knowledge synthesis as an ongoing rather than static endeavor - that can improve the timeliness of recommendation updates and reduce the knowledge-to-practice gap.\nLast The approach used here is also tackling the Evidence Generalization Problem, which refers to the challenge of applying findings from one context to another. By systematically mapping evidence across diverse contexts, we can better understand how and why certain interventions work in specific settings, and identify the conditions under which they are most effective.\n\n\n\n\nTo ensure relevance, we begin by clarifying the scope and purpose of the mapping:\n\nWhat types of interventions are we assessing? (IOM programs, policies, and strategies, e.g., cash-based interventions, health services, community engagement)\nWho are the target populations? (e.g., migrants, displaced persons, host communities)\nWhat outcomes matter most? (e.g., livelihood improvements, health outcomes, social integration - Aligned with the IOM Strategic Results Framework)\nWho is the audience for this map? (e.g., policymakers, funders, researchers, program managers, donors)\nWhat are our key learning questions? (e.g., “What works best to maximize impact an effectivness?”)\nWhat level of evidence is required? (e.g., RCTs, quasi-experiments, observational studies)\nWhat variables are we tracking? (e.g., intervention type, target group, outcomes, geography)\n\n\n\n\nWe have compiled a list of all publicly available IOM Evaluation Reports.\nEach report will be analyzed to generate a structured metadata record, including:\n\nWhat: Title, summary, full-text link, evaluation type (formative, summative, impact), scope (strategy, policy, thematic, program, or project), and geographic coverage\n\nWho: Conducting entity (IOM internal vs. external evaluators)\n\nHow: Methodology, study design, sample size, and data collection techniques\n\nThese metadata and full-text documents will be convert the content of each report into a embeddings vector database, enabling fast, flexible, and AI-enhanced retrieval using advanced tools like Hybrid Search.\n\n\n\n\nWe will create a set of plain-language questions, reflecting the entire IOM Results Framework. Using AI tools, we will extract consistent and comparable data from each report:\n\nProgram details (what was implemented)\n\nContext (where and with whom)\n\nDesign (how it was studied)\n\nFindings (what results were observed)\n\nStrength of evidence (how reliable the findings are)\n\n\n\n\n\nWe will then run those questions through the vector database to generate answers based first on each evaluation.\nThis will allow to categorize the data within a structured framework:\n\nBy intervention type (e.g., skills training, psychosocial support)\n\nBy measured outcome (e.g., employment, resilience, community cohesion)\n\nBy population (e.g., migrants in transit, returnees, host communities)\n\nBy evidence quality (e.g., robust vs. exploratory studies)\n\n\n\n\n\nOne key challenge is How to generalize the findings from an evaluation from one place to another one? The Generalizability Framework provides some insights on how to do that.\nWe will use the same questions to generate a Q&A dataset that can be used to answer the same questions across all evaluations, aka the full corpus of Q&A previously generated, therefore accounting for all evidences that were gathered across all evaluations.\nThis will allow us to quickly assess the evidence base and identify key insights, such as: _ “What types of interventions are most effective in improving livelihood outcomes for migrants in urban settings?”_\n\n\n\n\nWe’ll present the results across objectives, outcome, population and geography using intuitive, interactive visualizations:\n\nBubble maps (bubble size = number of studies or sample size)\n\nHeatmaps (showing concentration of evidence by topic or geography)\n\nGap maps (highlighting under-researched areas)\n\nThe evidence system will allow us to quickly highlight:\n\n✅ Areas with strong, consistent evidence\n\n⚠️ Topics with mixed or conflicting findings\n\n❌ Critical gaps where no evidence exists\n\nExample Insight:\n&gt; “Mentoring programs show consistent positive results for urban migrant youth, but there’s limited evidence for rural populations.”\n\n\n\n\n\nThe final deliverables will include:\n\nA Q&A dataset that can be used:\n\nAs a reference for content curation and evaluation\n\nAs a knowledge base for AI-enhanced project proposal systems\n\nAs a training dataset for fine-tuning small language models via Hugging Face\n\nA synthesis report identifying:\n\nResearch priorities\n\nHigh-risk areas for intervention\n\nRecommendations for future evaluations\n\nA searchable online visual evidence map for ongoing use by IOM teams that would allow to see evidence according to both SRF and GCM frameworks.\n\n\n\n\nIf you are new to using nbdev here are some useful pointers to get you started.\n\n\n# make sure evaluation_knowledge package is installed in development mode\n$ pip install -e .\n\n# make changes under nbs/ directory\n# ...\n\n# compile to have changes apply to evaluation_knowledge\n$ nbdev_prepare\n\n\n\n\n\n\nInstall latest from the GitHub repository:\n$ pip install git+https://github.com/iom/evaluation_knowledge.git\nor from conda\n$ conda install -c iom evaluation_knowledge\nor from pypi\n$ pip install evaluation_knowledge\n\n\n\nDocumentation can be found hosted on this GitHub repository’s pages. Additionally you can find package manager specific guidelines on conda and pypi respectively.\n\n\n\n\n\nPrepare the documentation of your library\nRun the module",
+    "crumbs": [
+      "evaluation_knowledge"
+    ]
+  },
+  {
+    "objectID": "index.html#introduction",
+    "href": "index.html#introduction",
+    "title": "evaluation_knowledge",
+    "section": "",
+    "text": "An Evidence Map is a structured, visual tool that organizes what we know—and don’t know—about programs, policies, and interventions. Think of it as a research and evaluation landscape that helps understand how the evidence available is distributed against a framework of reference: for example, the Sustainable Development Goals.\nIt allows us to quickly identify:\n\nWhich interventions have been evaluated\n\nWhere they were implemented\n\nWhat outcomes were observed\n\nWhere critical knowledge gaps remain\n\nThis approach is especially valuable for evidence-informed project design, particularly when time or resources limit the ability to read through hundreds of individual evaluation reports.",
+    "crumbs": [
+      "evaluation_knowledge"
+    ]
+  },
+  {
+    "objectID": "index.html#some-examples-of-evidence-maps",
+    "href": "index.html#some-examples-of-evidence-maps",
+    "title": "evaluation_knowledge",
+    "section": "",
+    "text": "Evidence and Gap Maps relating to Sustainable Development Goals\nKnown from birth: Generating and using evidence to strengthen birth registration systems in Africa (UNICEF)\nChild and Adolescent Mental Health and Psychosocial Support Interventions: An evidence and gap map of low- and middle-income countries (Report)\nYouth Futures Foundation Evidence & Gap Map on Interventions to Increase Youth Employment (Map; Report)\nEvidence map by the UNSDG System-Wide Evaluation Office (SWEO) mapping UN evaluations against the 2024 Quadrennial Comprehensive Policy Review (QCPR)\nUNICEF Evidence Map example).",
+    "crumbs": [
+      "evaluation_knowledge"
+    ]
+  },
+  {
+    "objectID": "index.html#about-this-project",
+    "href": "index.html#about-this-project",
+    "title": "evaluation_knowledge",
+    "section": "",
+    "text": "Evidence Maps are relatively established tools that started being common before the popularization of LLMs and AI in general. Their production generally entails a large amount of staff-hours spent on reviewing documentation and “tagging” it, with more or less articulated arrangements for source selection and cross-verification of the human-led classification. Recent practice in evidence mapping focuses on the automation of different steps of the map production process via AI.\nThe goal of this exercise is to create an AI-powered open source application capable of accurately ““tagging” evaluation reports against the IOM Strategic Result Framework and the Global Compact on Migration, two important tools that guide the action of IOM and other entities in the humanitarian and development space.\nRather than a fully automated tagging tool, the instrument will be used in the context of a structured and efficient human-machine collaboration protocol whereby the relative strengths of each are leveraged. This initiative aims at producing a fully reproducible solution that is not only scalable, but also easy to repurpose for other applications in the humanitarian and development space.\nThe goal of this exercise is to inform future evaluation design, guide strategic planning, and support the development of robust, evidence-based project proposals and strategic plan.\nIn addition, such AI-enhanced approach shall help to manage evaluation output as “LivingEvidence” - aka looking at knowledge synthesis as an ongoing rather than static endeavor - that can improve the timeliness of recommendation updates and reduce the knowledge-to-practice gap.\nLast The approach used here is also tackling the Evidence Generalization Problem, which refers to the challenge of applying findings from one context to another. By systematically mapping evidence across diverse contexts, we can better understand how and why certain interventions work in specific settings, and identify the conditions under which they are most effective.",
+    "crumbs": [
+      "evaluation_knowledge"
+    ]
+  },
+  {
+    "objectID": "index.html#approach",
+    "href": "index.html#approach",
+    "title": "evaluation_knowledge",
+    "section": "",
+    "text": "To ensure relevance, we begin by clarifying the scope and purpose of the mapping:\n\nWhat types of interventions are we assessing? (IOM programs, policies, and strategies, e.g., cash-based interventions, health services, community engagement)\nWho are the target populations? (e.g., migrants, displaced persons, host communities)\nWhat outcomes matter most? (e.g., livelihood improvements, health outcomes, social integration - Aligned with the IOM Strategic Results Framework)\nWho is the audience for this map? (e.g., policymakers, funders, researchers, program managers, donors)\nWhat are our key learning questions? (e.g., “What works best to maximize impact an effectivness?”)\nWhat level of evidence is required? (e.g., RCTs, quasi-experiments, observational studies)\nWhat variables are we tracking? (e.g., intervention type, target group, outcomes, geography)\n\n\n\n\nWe have compiled a list of all publicly available IOM Evaluation Reports.\nEach report will be analyzed to generate a structured metadata record, including:\n\nWhat: Title, summary, full-text link, evaluation type (formative, summative, impact), scope (strategy, policy, thematic, program, or project), and geographic coverage\n\nWho: Conducting entity (IOM internal vs. external evaluators)\n\nHow: Methodology, study design, sample size, and data collection techniques\n\nThese metadata and full-text documents will be convert the content of each report into a embeddings vector database, enabling fast, flexible, and AI-enhanced retrieval using advanced tools like Hybrid Search.\n\n\n\n\nWe will create a set of plain-language questions, reflecting the entire IOM Results Framework. Using AI tools, we will extract consistent and comparable data from each report:\n\nProgram details (what was implemented)\n\nContext (where and with whom)\n\nDesign (how it was studied)\n\nFindings (what results were observed)\n\nStrength of evidence (how reliable the findings are)\n\n\n\n\n\nWe will then run those questions through the vector database to generate answers based first on each evaluation.\nThis will allow to categorize the data within a structured framework:\n\nBy intervention type (e.g., skills training, psychosocial support)\n\nBy measured outcome (e.g., employment, resilience, community cohesion)\n\nBy population (e.g., migrants in transit, returnees, host communities)\n\nBy evidence quality (e.g., robust vs. exploratory studies)\n\n\n\n\n\nOne key challenge is How to generalize the findings from an evaluation from one place to another one? The Generalizability Framework provides some insights on how to do that.\nWe will use the same questions to generate a Q&A dataset that can be used to answer the same questions across all evaluations, aka the full corpus of Q&A previously generated, therefore accounting for all evidences that were gathered across all evaluations.\nThis will allow us to quickly assess the evidence base and identify key insights, such as: _ “What types of interventions are most effective in improving livelihood outcomes for migrants in urban settings?”_\n\n\n\n\nWe’ll present the results across objectives, outcome, population and geography using intuitive, interactive visualizations:\n\nBubble maps (bubble size = number of studies or sample size)\n\nHeatmaps (showing concentration of evidence by topic or geography)\n\nGap maps (highlighting under-researched areas)\n\nThe evidence system will allow us to quickly highlight:\n\n✅ Areas with strong, consistent evidence\n\n⚠️ Topics with mixed or conflicting findings\n\n❌ Critical gaps where no evidence exists\n\nExample Insight:\n&gt; “Mentoring programs show consistent positive results for urban migrant youth, but there’s limited evidence for rural populations.”",
+    "crumbs": [
+      "evaluation_knowledge"
+    ]
+  },
+  {
+    "objectID": "index.html#deliverables",
+    "href": "index.html#deliverables",
+    "title": "evaluation_knowledge",
+    "section": "",
+    "text": "The final deliverables will include:\n\nA Q&A dataset that can be used:\n\nAs a reference for content curation and evaluation\n\nAs a knowledge base for AI-enhanced project proposal systems\n\nAs a training dataset for fine-tuning small language models via Hugging Face\n\nA synthesis report identifying:\n\nResearch priorities\n\nHigh-risk areas for intervention\n\nRecommendations for future evaluations\n\nA searchable online visual evidence map for ongoing use by IOM teams that would allow to see evidence according to both SRF and GCM frameworks.",
+    "crumbs": [
+      "evaluation_knowledge"
+    ]
+  },
+  {
+    "objectID": "index.html#developer-guide",
+    "href": "index.html#developer-guide",
+    "title": "evaluation_knowledge",
+    "section": "",
+    "text": "If you are new to using nbdev here are some useful pointers to get you started.\n\n\n# make sure evaluation_knowledge package is installed in development mode\n$ pip install -e .\n\n# make changes under nbs/ directory\n# ...\n\n# compile to have changes apply to evaluation_knowledge\n$ nbdev_prepare",
+    "crumbs": [
+      "evaluation_knowledge"
+    ]
+  },
+  {
+    "objectID": "index.html#usage",
+    "href": "index.html#usage",
+    "title": "evaluation_knowledge",
+    "section": "",
+    "text": "Install latest from the GitHub repository:\n$ pip install git+https://github.com/iom/evaluation_knowledge.git\nor from conda\n$ conda install -c iom evaluation_knowledge\nor from pypi\n$ pip install evaluation_knowledge\n\n\n\nDocumentation can be found hosted on this GitHub repository’s pages. Additionally you can find package manager specific guidelines on conda and pypi respectively.",
+    "crumbs": [
+      "evaluation_knowledge"
+    ]
+  },
+  {
+    "objectID": "index.html#how-to-use",
+    "href": "index.html#how-to-use",
+    "title": "evaluation_knowledge",
+    "section": "",
+    "text": "Prepare the documentation of your library\nRun the module",
+    "crumbs": [
+      "evaluation_knowledge"
+    ]
+  },
+  {
+    "objectID": "core.html",
+    "href": "core.html",
+    "title": "core",
+    "section": "",
+    "text": "foo\n\n foo ()",
+    "crumbs": [
+      "core"
+    ]
+  }
+]

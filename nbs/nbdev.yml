@@ -1,0 +1,9 @@
+project:
+  output-dir: _docs
+
+website:
+  title: "evaluation_knowledge"
+  site-url: "https://iom.github.io/evaluation_knowledge"
+  description: "A module to turn Evaluation Reports into AI knowledge"
+  repo-branch: main
+  repo-url: "https://github.com/iom/evaluation_knowledge"

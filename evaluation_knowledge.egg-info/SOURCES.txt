@@ -1,0 +1,16 @@
+LICENSE
+MANIFEST.in
+README.md
+pyproject.toml
+settings.ini
+setup.py
+evaluation_knowledge/__init__.py
+evaluation_knowledge/_modidx.py
+evaluation_knowledge/core.py
+evaluation_knowledge.egg-info/PKG-INFO
+evaluation_knowledge.egg-info/SOURCES.txt
+evaluation_knowledge.egg-info/dependency_links.txt
+evaluation_knowledge.egg-info/entry_points.txt
+evaluation_knowledge.egg-info/not-zip-safe
+evaluation_knowledge.egg-info/requires.txt
+evaluation_knowledge.egg-info/top_level.txt
