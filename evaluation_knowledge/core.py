@@ -11,8 +11,6 @@ __all__ = ['MAX_RETRIES', 'RETRY_DELAY', 'THREADS', 'THROTTLE_DELAY_RANGE', 'USE
            'generate_evaluation_metadata']
 
 # %% ../nbs/00_core.ipynb 8
-#|eval: true
-#| echo: true
 #|label: load_evaluations
 import pandas as pd
 import openpyxl
@@ -84,8 +82,6 @@ def load_evaluations(file_path,json_path):
 
 
 # %% ../nbs/00_core.ipynb 11
-#|eval: true
-#| echo: true
 #|label: load_iom_framework
 import pandas as pd
 import openpyxl
@@ -102,8 +98,6 @@ def load_iom_framework(excel_path: str) -> pd.DataFrame:
 
 
 # %% ../nbs/00_core.ipynb 17
-#|eval: true
-#| echo: true
 #|label: load_evaluations
 from typing import List, Dict, Optional # Type hinting
 import json
@@ -137,8 +131,6 @@ def load_evaluations(json_path: str) -> List[Dict]:
 
 
 # %% ../nbs/00_core.ipynb 21
-#|eval: true
-#| echo: true
 #|label: generate_id
 import hashlib
 def generate_id(text: str) -> str:
@@ -146,8 +138,6 @@ def generate_id(text: str) -> str:
     return hashlib.md5(text.encode()).hexdigest()
 
 # %% ../nbs/00_core.ipynb 23
-#|eval: true
-#| echo: true
 #|label: force_delete_directory
 import time
 import shutil
@@ -167,8 +157,6 @@ def force_delete_directory(path, max_retries=3, delay=1):
 
 
 # %% ../nbs/00_core.ipynb 26
-#|eval: true
-#| echo: true
 #|label: initialise_knowledge_base
 from lancedb import connect
 import numpy as np
@@ -315,8 +303,6 @@ def initialise_knowledge_base(db, evaluation: Dict):
 
 
 # %% ../nbs/00_core.ipynb 33
-#|eval: true
-#| echo: true
 #|label: download_documents
 import os
 import time

@@ -309,7 +309,7 @@ python -m venv .venv</code></pre>
 <h3 class="anchored" data-anchor-id="load-pdf-library-and-strategic-results-framework">Load PDF library and Strategic Results Framework</h3>
 <p>The library</p>
 <hr>
-<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L107" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L104" target="_blank" style="float:right; font-size:smaller">source</a></p>
 </section>
 <section id="load_evaluations" class="level3">
 <h3 class="anchored" data-anchor-id="load_evaluations">load_evaluations</h3>
@@ -321,7 +321,7 @@ python -m venv .venv</code></pre>
 </div>
 <p>Now the framework</p>
 <hr>
-<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L90" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L88" target="_blank" style="float:right; font-size:smaller">source</a></p>
 </section>
 <section id="load_iom_framework" class="level3">
 <h3 class="anchored" data-anchor-id="load_iom_framework">load_iom_framework</h3>
@@ -504,7 +504,7 @@ python -m venv .venv</code></pre>
 * evaluation_id: foreign key to link to the evaluation * document_id: ID of the original file * document_page: for proper referencing of any further information retrieval * chunk_index: order of the chunk in the document * text: the chunked content * embedding (for hybrid search)</p>
 <p>Let’s start by loading the library from json…</p>
 <hr>
-<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L107" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L104" target="_blank" style="float:right; font-size:smaller">source</a></p>
 </section>
 <section id="load_evaluations-1" class="level3">
 <h3 class="anchored" data-anchor-id="load_evaluations-1">load_evaluations</h3>
@@ -524,7 +524,7 @@ python -m venv .venv</code></pre>
 </div>
 <p>Id Generation</p>
 <hr>
-<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L140" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L136" target="_blank" style="float:right; font-size:smaller">source</a></p>
 </section>
 <section id="generate_id" class="level3">
 <h3 class="anchored" data-anchor-id="generate_id">generate_id</h3>
@@ -537,7 +537,7 @@ python -m venv .venv</code></pre>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>({eval_id})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <hr>
-<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L149" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L144" target="_blank" style="float:right; font-size:smaller">source</a></p>
 </section>
 <section id="force_delete_directory" class="level3">
 <h3 class="anchored" data-anchor-id="force_delete_directory">force_delete_directory</h3>
@@ -550,7 +550,7 @@ python -m venv .venv</code></pre>
 </div>
 <p>We start prefilling our vector database with the metadata</p>
 <hr>
-<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L177" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L171" target="_blank" style="float:right; font-size:smaller">source</a></p>
 </section>
 <section id="initialise_knowledge_base" class="level3">
 <h3 class="anchored" data-anchor-id="initialise_knowledge_base">initialise_knowledge_base</h3>
@@ -559,7 +559,7 @@ python -m venv .venv</code></pre>
 </blockquote>
 <p><em>Store full documents without chunking (late chunking approach)</em></p>
 <hr>
-<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L170" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L164" target="_blank" style="float:right; font-size:smaller">source</a></p>
 </section>
 <section id="safe_get" class="level3">
 <h3 class="anchored" data-anchor-id="safe_get">safe_get</h3>
@@ -596,7 +596,7 @@ python -m venv .venv</code></pre>
 <h3 class="anchored" data-anchor-id="download-and-prepare-all-the-files">Download and prepare all the files</h3>
 <p>Now we build a smart function to download the files from URL: - this function takes an argument the <code>doc_table</code> from the vector DB (<code>doc_table = db.open_table("documents")</code>). this table includes document_id, url, and evaluation_id - then for each document, and in parallelised way, it loads the url and extract the <code>file_name</code> from the <code>url</code> within the table - it builds a local <code>file_path</code> with <code>PDF_Library</code>/<code>evaluation_id</code>/<code>file_name</code> (where <code>PDF_Library</code> is an environment variable) - it checks if the ‘file_name’ is already present and then gracefully exit - if not, it downloads the file_name - this done with with some provision to avoid requesting IP being banned - and ensure some retry until the file is downloaded - if the file_name extension is not pdf, it identify the file extension then it converts it to pdf</p>
 <hr>
-<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L339" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L332" target="_blank" style="float:right; font-size:smaller">source</a></p>
 </section>
 <section id="download_documents" class="level3">
 <h3 class="anchored" data-anchor-id="download_documents">download_documents</h3>
@@ -610,7 +610,7 @@ sudo apt install libreoffice
 # Mac (Homebrew)
 brew install --cask libreoffice</code></pre>
 <hr>
-<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L455" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L449" target="_blank" style="float:right; font-size:smaller">source</a></p>
 </section>
 <section id="convert_file_to_pdf" class="level3">
 <h3 class="anchored" data-anchor-id="convert_file_to_pdf">convert_file_to_pdf</h3>
@@ -619,7 +619,7 @@ brew install --cask libreoffice</code></pre>
 </blockquote>
 <p><em>Converts Word, Excel, or PowerPoint file to PDF using LibreOffice in headless mode. Works on Windows, macOS, and Linux.</em></p>
 <hr>
-<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L419" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L413" target="_blank" style="float:right; font-size:smaller">source</a></p>
 </section>
 <section id="find_libreoffice_exec" class="level3">
 <h3 class="anchored" data-anchor-id="find_libreoffice_exec">find_libreoffice_exec</h3>
@@ -685,7 +685,7 @@ brew install --cask libreoffice</code></pre>
 </div>
 <p>and then the function creating embeddings chunck for each document</p>
 <hr>
-<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L547" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L543" target="_blank" style="float:right; font-size:smaller">source</a></p>
 </section>
 <section id="process_documents_to_chunks" class="level3">
 <h3 class="anchored" data-anchor-id="process_documents_to_chunks">process_documents_to_chunks</h3>
@@ -703,7 +703,7 @@ brew install --cask libreoffice</code></pre>
 </div>
 <p>Checking the status of the chunking process</p>
 <hr>
-<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L684" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L681" target="_blank" style="float:right; font-size:smaller">source</a></p>
 </section>
 <section id="check_chunk_status" class="level3">
 <h3 class="anchored" data-anchor-id="check_chunk_status">check_chunk_status</h3>
@@ -726,7 +726,7 @@ brew install --cask libreoffice</code></pre>
 <p>Last, we run a function to generate metadata…</p>
 <p>The function will load the “evaluations” table within the db –connect(LANCE_DB_PATH) – then loop around each evaluation_id within the “chunks” table to retrive the context - and perform an LLM call to then generate as an output additional metadata Then it will update the evaluations table with the output for each evaluation - At the end it will save a json file with a dump of the evaluations table</p>
 <hr>
-<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L842" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L840" target="_blank" style="float:right; font-size:smaller">source</a></p>
 </section>
 <section id="get_context_for_eval" class="level3">
 <h3 class="anchored" data-anchor-id="get_context_for_eval">get_context_for_eval</h3>
@@ -734,7 +734,7 @@ brew install --cask libreoffice</code></pre>
 <pre><code> get_context_for_eval (eval_row, query, chunk_table)</code></pre>
 </blockquote>
 <hr>
-<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L800" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L798" target="_blank" style="float:right; font-size:smaller">source</a></p>
 </section>
 <section id="call_llm_with_retries" class="level3">
 <h3 class="anchored" data-anchor-id="call_llm_with_retries">call_llm_with_retries</h3>
@@ -742,7 +742,7 @@ brew install --cask libreoffice</code></pre>
 <pre><code> call_llm_with_retries (prompt, max_retries=4, delay=2)</code></pre>
 </blockquote>
 <hr>
-<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L788" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L786" target="_blank" style="float:right; font-size:smaller">source</a></p>
 </section>
 <section id="safe_join" class="level3">
 <h3 class="anchored" data-anchor-id="safe_join">safe_join</h3>
@@ -750,7 +750,7 @@ brew install --cask libreoffice</code></pre>
 <pre><code> safe_join (items, sep=', ')</code></pre>
 </blockquote>
 <hr>
-<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L763" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L761" target="_blank" style="float:right; font-size:smaller">source</a></p>
 </section>
 <section id="clean_json" class="level3">
 <h3 class="anchored" data-anchor-id="clean_json">clean_json</h3>
@@ -765,7 +765,7 @@ brew install --cask libreoffice</code></pre>
 <p><strong>4. Outcome (O)</strong>:The measurable effects or endpoints used to assess the intervention’s impact. Includes primary outcomes (main indicators of interest, e.g., school enrollment rates, income levels) and secondary outcomes (e.g., health, empowerment). Should be specific, measurable, and time-bound (e.g., “child literacy scores after 12 months”).</p>
 <p>Using such approach, we can ensure Clarity (the research question is well-defined and testable), Causal Inference (isolate the effect of the intervention by comparing treated and untreated groups), Replicability (to potentially extrapolate the findings) and Relevance (linking outcomes to real-world decision-making).</p>
 <hr>
-<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L871" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L870" target="_blank" style="float:right; font-size:smaller">source</a></p>
 </section>
 <section id="generate_metadata_for_evaluation_metadata_descriptive" class="level3">
 <h3 class="anchored" data-anchor-id="generate_metadata_for_evaluation_metadata_descriptive">generate_metadata_for_evaluation_metadata_descriptive</h3>
@@ -787,7 +787,7 @@ brew install --cask libreoffice</code></pre>
 </blockquote>
 <p><em>Process one evaluation row and return updated row with metadata.</em></p>
 <hr>
-<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L1044" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L1045" target="_blank" style="float:right; font-size:smaller">source</a></p>
 </section>
 <section id="generate_metadata_for_evaluation_metadata_evidence" class="level3">
 <h3 class="anchored" data-anchor-id="generate_metadata_for_evaluation_metadata_evidence">generate_metadata_for_evaluation_metadata_evidence</h3>
@@ -797,7 +797,7 @@ brew install --cask libreoffice</code></pre>
 </blockquote>
 <p><em>Process one evaluation row and return updated row with metadata.</em></p>
 <hr>
-<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L1117" target="_blank" style="float:right; font-size:smaller">source</a></p>
+<p><a href="https://github.com/iom/evaluation_knowledge/blob/main/evaluation_knowledge/core.py#L1119" target="_blank" style="float:right; font-size:smaller">source</a></p>
 </section>
 <section id="generate_evaluation_metadata" class="level3">
 <h3 class="anchored" data-anchor-id="generate_evaluation_metadata">generate_evaluation_metadata</h3>
