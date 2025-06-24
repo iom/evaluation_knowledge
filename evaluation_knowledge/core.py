@@ -3,19 +3,19 @@
 # %% auto 0
 __all__ = ['MAX_RETRIES', 'RETRY_DELAY', 'THREADS', 'THROTTLE_DELAY_RANGE', 'USER_AGENTS', 'embedding_model', 'CHUNK_SIZE',
            'CHUNK_OVERLAP', 'RETRY_BACKOFF', 'LOG_FILE', 'llm_accurate0', 'llm_accurate', 'query_descriptive',
-           'query_methodo', 'query', 'load_evaluations', 'load_iom_framework', 'generate_id', 'force_delete_directory',
-           'safe_get', 'initialise_knowledge_base', 'download_documents', 'find_libreoffice_exec',
-           'convert_file_to_pdf', 'process_documents_to_chunks', 'check_chunk_status', 'clean_json', 'safe_join',
-           'call_llm_with_retries', 'get_context_for_eval', 'generate_metadata_for_evaluation_metadata_descriptive',
-           'generate_metadata_for_evaluation_metadata_methodo', 'generate_metadata_for_evaluation_metadata_evidence',
-           'generate_evaluation_metadata']
+           'query_methodo', 'query', 'library_evaluations', 'load_iom_framework', 'load_evaluations', 'generate_id',
+           'force_delete_directory', 'safe_get', 'initialise_knowledge_base', 'download_documents',
+           'find_libreoffice_exec', 'convert_file_to_pdf', 'process_documents_to_chunks', 'check_chunk_status',
+           'clean_json', 'safe_join', 'call_llm_with_retries', 'get_context_for_eval',
+           'generate_metadata_for_evaluation_metadata_descriptive', 'generate_metadata_for_evaluation_metadata_methodo',
+           'generate_metadata_for_evaluation_metadata_evidence', 'generate_evaluation_metadata']
 
 # %% ../nbs/00_core.ipynb 8
-#|label: load_evaluations
+#|label: library_evaluations
 import pandas as pd
 import openpyxl
 import json
-def load_evaluations(file_path,json_path):
+def library_evaluations(file_path,json_path):
     # Load the Excel file
     df = pd.read_excel(file_path, sheet_name='extract from 2005 to Aug 2024', engine='openpyxl')
     
@@ -402,8 +402,6 @@ def download_documents(doc_table):
 
 
 # %% ../nbs/00_core.ipynb 35
-#|eval: true
-#| echo: true
 #|label: convert_file_to_pdf
 import subprocess
 import platform
@@ -488,8 +486,6 @@ def convert_file_to_pdf(input_path, output_path):
 
 
 # %% ../nbs/00_core.ipynb 39
-#|eval: false
-#| echo: true
 #|label: initialise_embeddings
 # Initialize embeddings
 import os
@@ -506,8 +502,6 @@ embedding_model = AzureOpenAIEmbeddings(
 
 
 # %% ../nbs/00_core.ipynb 45
-#|eval: true
-#| echo: true
 #|label: process_documents_to_chunks
 import os
 import fitz  # PyMuPDF
@@ -675,8 +669,6 @@ def process_documents_to_chunks(doc_table, chunk_table):
 
 
 # %% ../nbs/00_core.ipynb 49
-#|eval: true
-#| echo: true
 #|label: check_chunk_status
 def check_chunk_status(doc_table, chunk_table):
     import pandas as pd
@@ -718,9 +710,7 @@ def check_chunk_status(doc_table, chunk_table):
 
 
 # %% ../nbs/00_core.ipynb 52
-#|eval: true
-#| echo: true
-#|label: generate_evaluation_metadata
+#|label: evaluation_metadata_building
 # setting up for metadata generation
 import json
 import time
@@ -858,8 +848,6 @@ def get_context_for_eval(eval_row, query, chunk_table):
 
 
 # %% ../nbs/00_core.ipynb 54
-#|eval: true
-#| echo: true
 #|label: generate_metadata_for_evaluation_metadata_descriptive
 # descriptive
 from langchain.schema import HumanMessage
@@ -936,8 +924,6 @@ def generate_metadata_for_evaluation_metadata_descriptive(eval_row, query_descri
 
 
 # %% ../nbs/00_core.ipynb 55
-#|eval: true
-#| echo: true
 #|label: generate_metadata_for_evaluation_metadata_methodo
 #methodo
 from langchain.schema import HumanMessage
@@ -1033,8 +1019,6 @@ def generate_metadata_for_evaluation_metadata_methodo(eval_row, query_methodo, c
 
 
 # %% ../nbs/00_core.ipynb 56
-#|eval: true
-#| echo: true
 #|label: generate_metadata_for_evaluation_metadata_evidence
 # evidence
 from langchain.schema import HumanMessage
@@ -1112,8 +1096,6 @@ def generate_metadata_for_evaluation_metadata_evidence(eval_row, query, chunk_ta
 
 
 # %% ../nbs/00_core.ipynb 57
-#|eval: true
-#| echo: true
 #|label: generate_evaluation_metadata
 # process all
 def generate_evaluation_metadata(
